@@ -1,73 +1,59 @@
-import { useState } from 'react';
-import './App.css';
-import Papa from 'papaparse';
+import { useState } from 'react'
+
+import './App.css'
 
 function App() {
+  const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
-  const [recordNo, setRecordNo] = useState(0);
 
-  const handleFileUpload = (e) =>{
-    const file = e.target.files[0];
-    Papa.parse(file, {
-      header: true,
-      complete: (results) => {
-        //var newObj = Object.entries(results.data).slice(0,3)
-        setData(results.data);
-        
-        
+  async function getQuote(count){
 
-    }})
+    const postOptions = {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'
+        },
+      body: JSON.stringify(count)
+    };
+
+    const postResponse = await fetch('http://localhost:3000/api',postOptions);
+
+    const results = await fetch('http://localhost:3000/api').then((res)=>res.json());
+    
+    console.log("drum roll");
+    console.log("Close price is: " + results.close);
+    
+    setData(results);
   };
+                                                                                                     
+  getQuote(count);  
+  //getQuote(0);
 
   return (
     <>
-      
-      <div className="App">
+      <div>
+            <h1>{data.symbol}</h1><br/>
+            <br/>
+            Date:{data.date}<br/>
+            <br/>
+            Open: {data.open}<br/>
+            <br/>
+            High: {data.high}<br/>
+            <br/>
+            Low: {data.low}<br/>
+            <br/>
+            Close (Last Price): {data.close}<br/>
+            <br/>
+            Volume: {data.volume}<br/>
+        <br/>
         <p>
-        <input type = "file" accept = ".csv" onChange = {handleFileUpload} />
+          <button onClick={() => setCount((count) => count + 1)}>
+            Get Next Price {count}
+          </button>
         </p>
-        <br/>
-        <br/>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>date</th>
-              <th>open</th>
-              <th>high</th>
-              <th>low</th>
-              <th>close</th>
-              <th>volume</th>
-            </tr>
-          </thead>
-          <tbody>
-            {console.log('2oody')}
-            {console.log(typeof data)}
-            {console.log(data.length)}
-            <tr>
-              <td>{data.length ? (data[recordNo].date) : null}</td>
-              <td>{data.length ? (data[recordNo].open) : null}</td>
-              <td>{data.length ? (data[recordNo].high) : null}</td>
-              <td>{data.length ? (data[recordNo].low) : null}</td>
-              <td bgcolor='yellow'>{data.length ? (data[recordNo].close) : null}</td>
-              <td>{data.length ? (data[recordNo].volume) : null}</td>
-            </tr>
-            
-
-            <tr>
-            
-            </tr>
-
-          </tbody>
-
-
-        </table>
-        <p><button onClick = {() => setRecordNo((recordNo) => recordNo + 1)} >Get Next Price</button></p>
-        
-        
-      </div>
-
+        </div>        
     </>
-  );
-}
+  )
+};
 
 export default App
