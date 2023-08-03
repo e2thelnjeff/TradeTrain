@@ -31,9 +31,7 @@ function App() {
     
     setData(results);
   };
-                                                                                                     
-  //getQuote(count);  
-  //getQuote(0);
+                                                                             
 
   return (
     <>

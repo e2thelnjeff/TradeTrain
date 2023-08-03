@@ -22,8 +22,8 @@ app.use(cors(corsOptions));
   //  next();
 //});
 
-//var count = 0;
-const quotes = require('./2019-01-04_MSFT.json');
+
+const quotes = require('./trade_data/2019-01-04_MSFT.json');
 const symbol = 'MSFT';
 
 //const date = quotes[count].date;
