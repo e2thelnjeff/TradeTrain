@@ -5,8 +5,11 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
+  const [index, setIndex] = useState(0);
 
-  async function getQuote(count){
+  async function getQuote(){
+
+    setCount((count)=>count+1);
 
     const postOptions = {
       method: 'POST',
@@ -16,17 +19,20 @@ function App() {
       body: JSON.stringify(count)
     };
 
-    const postResponse = await fetch('http://localhost:3000/api',postOptions);
+    //const postResponse = await fetch('http://localhost:3000/api',postOptions);
 
-    const results = await fetch('http://localhost:3000/api').then((res)=>res.json());
+    const results = await fetch('http://localhost:3000/api?count='+count).then((res)=>res.json());
     
     console.log("drum roll");
     console.log("Close price is: " + results.close);
     
+    setIndex(index + 1);
+    console.log(index);
+    
     setData(results);
   };
                                                                                                      
-  getQuote(count);  
+  //getQuote(count);  
   //getQuote(0);
 
   return (
@@ -47,9 +53,7 @@ function App() {
             Volume: {data.volume}<br/>
         <br/>
         <p>
-          <button onClick={() => setCount((count) => count + 1)}>
-            Get Next Price {count}
-          </button>
+          <button onClick={() => getQuote()}>Get Next Price</button>
         </p>
         </div>        
     </>

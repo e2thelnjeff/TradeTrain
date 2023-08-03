@@ -22,33 +22,37 @@ app.use(cors(corsOptions));
   //  next();
 //});
 
-var count = 0;
+//var count = 0;
 const quotes = require('./2019-01-04_MSFT.json');
 const symbol = 'MSFT';
 
-const date = quotes[count].date;
-const open = quotes[count].open;
-const high = quotes[count].high;
-const low = quotes[count].low;
-const close = quotes[count].close;
-const volume = quotes[count].volume;
+//const date = quotes[count].date;
+//const open = quotes[count].open;
+//const high = quotes[count].high;
+//const low = quotes[count].low;
+//const close = quotes[count].close;
+//const volume = quotes[count].volume;
 
 app.get("/api",function(req,res){
+    count = req.query.count;
     const currentQuote = {
         symbol: symbol,
-        date: date,
-        open: open,
-        high: high,
-        low: low,
-        close: close,
-        volume: volume
+        date: quotes[count].date,
+        open: quotes[count].open,
+        high: quotes[count].high,
+        low: quotes[count].low,
+        close: quotes[count].close,
+        volume: quotes[count].volume
     };
+
     res.send(currentQuote);
+    console.log(req.query.count);
+                                                                              
 });
 
 app.post("/api",function(req,res){
     //header = {};
-    count =                                                             req.body;
+    count = req.body;
     res.send("acknowledged");
     console.log("server side knows count as: " + count);    
 }
