@@ -47,7 +47,6 @@ app.get("/api",function(req,res){
 
     res.send(currentQuote);
     console.log(req.query.count);
-                                                                              
 });
 
 app.post("/api",function(req,res){

@@ -37,18 +37,32 @@ function App() {
     <>
       <div>
             <h1>{data.symbol}</h1><br/>
-            <br/>
-            Date:{data.date}<br/>
-            <br/>
-            Open: {data.open}<br/>
-            <br/>
-            High: {data.high}<br/>
-            <br/>
-            Low: {data.low}<br/>
-            <br/>
-            Close (Last Price): {data.close}<br/>
-            <br/>
-            Volume: {data.volume}<br/>
+            <table>
+            <tr>
+              <td>Date: </td>
+              <td>{data.date}</td>
+            </tr>
+            <tr>
+              <td>Open: </td>
+              <td>{data.open}</td>
+            </tr>
+            <tr>
+              <td>High: </td>
+              <td>{data.high}</td>
+            </tr>
+            <tr>
+              <td>Low: </td>
+              <td>{data.low}</td>
+            </tr>
+            <tr>
+              <td>Close (Last Price): </td>
+              <td>{data.close}</td>
+            </tr>
+            <tr>
+              <td>Volume: </td>
+              <td>{data.volume}</td>
+            </tr>
+            </table>
         <br/>
         <p>
           <button onClick={() => getQuote()}>Get Next Price</button>
