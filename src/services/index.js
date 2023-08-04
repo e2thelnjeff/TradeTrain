@@ -1,12 +1,13 @@
+const fs = require('fs');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+
 let corsOptions = {
     origin: '*',
-   };
-
-const express = require('express');
+};
 const app = express();
-
-const bodyParser = require('body-parser');
 //app.use(express.static('public'));
 app.use(express.json());
 //app.use(cors(origin: ['http://localhost:3001']));
@@ -23,8 +24,8 @@ app.use(cors(corsOptions));
 //});
 
 
-const quotes = require('./trade_data/2019-01-04_MSFT.json');
-const symbol = 'MSFT';
+var quotes = require('./trade_data/2019-01-04_MSFT.json');
+
 
 //const date = quotes[count].date;
 //const open = quotes[count].open;
@@ -35,6 +36,12 @@ const symbol = 'MSFT';
 
 app.get("/api",function(req,res){
     count = req.query.count;
+    symbol_day = req.query.symbol_day;
+    let symbol = symbol_day.slice(symbol_day.indexOf('_') + 1);
+    if (symbol_day) {
+        quotes = require(`./trade_data/${symbol_day}.json`);
+    }
+    
     const currentQuote = {
         symbol: symbol,
         date: quotes[count].date,
@@ -44,12 +51,27 @@ app.get("/api",function(req,res){
         close: quotes[count].close,
         volume: quotes[count].volume
     };
-
-    res.send(currentQuote);
+    
     console.log(req.query.count);
-                                                                              
+    res.send(currentQuote);
 });
 
+app.get("/api/get_symbol_days",function(req,res){
+    fs.readdir(path.join(__dirname, 'trade_data'), (err, files)=>{
+        if (err) {
+            console.log(err);
+        }
+        const file_names = [];
+        console.log('symbol days call');
+        files.forEach((file, i)=>{
+            files[i] = file.slice(0, -5);
+        })
+        res.send({file_names: files});
+    })
+});
+
+
+/*
 app.post("/api",function(req,res){
     //header = {};
     count = req.body;
@@ -57,5 +79,6 @@ app.post("/api",function(req,res){
     console.log("server side knows count as: " + count);    
 }
 );
+*/
 
 app.listen(3000, () => console.log('Listening at 3000'));
