@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import './App.css'
-
+                            
 function App() {
   const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
@@ -25,9 +25,6 @@ function App() {
     
     console.log("drum roll");
     console.log("Close price is: " + results.close);
-    
-    setIndex(index + 1);
-    console.log(index);
     
     setData(results);
   };
