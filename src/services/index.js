@@ -14,18 +14,7 @@ app.use(express.json());
 app.use(cors(corsOptions));
 //app.use(cors());
 
-//app.use((req,res,next) => {
-  //  res.setHeader("Access-Control-Allow-Origin","*");
-  //  res.header(
-  //      "Access-Control-Allow-Headers",
-  //      "Origin, X-Requested-With, Content-Type, Accept"
-  //  );
-  //  next();
-//});
-
-
 var quotes = require('./trade_data/2019-01-04_MSFT.json');
-
 
 //const date = quotes[count].date;
 //const open = quotes[count].open;
@@ -40,7 +29,7 @@ app.get("/api",function(req,res){
     let symbol = symbol_day.slice(symbol_day.indexOf('_') + 1);
     if (symbol_day) {
         quotes = require(`./trade_data/${symbol_day}.json`);
-    }
+        }
     
     const currentQuote = {
         symbol: symbol,

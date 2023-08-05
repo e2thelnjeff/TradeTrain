@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-                            
+import GridEqualWidth from './components/GridEqualWidth.jsx'
+import BuyButton from './components/BuyButton'
+import SellButton from './components/SellButton'
+
 function App() {
   const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
@@ -44,6 +47,7 @@ function App() {
     <>
       <div>
         <h1>{data.symbol}</h1>
+        
         <p>
           <select class="ui dropdown" title='Symbol Day' id='symbo_day_selection' onChange={()=>setSelectedSymbolDay(symbo_day_selection.value)}>
             {symbol_days.map((symbol_day, i)=>{
@@ -81,7 +85,19 @@ function App() {
         <p>
           <button onClick={() => getQuote()}>Get Next Price</button>
         </p>
+
+            {data.high}
+
+            <BuyButton />
           
+            {data.volume} 
+            <br/>
+            {data.close}
+          
+          
+          <SellButton />
+            {data.low}
+
       </div>
     </>
   )
