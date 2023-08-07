@@ -3,6 +3,7 @@ import './App.css'
 import GridEqualWidth from './components/GridEqualWidth.jsx'
 import BuyButton from './components/BuyButton'
 import SellButton from './components/SellButton'
+import Input from './components/Input'
 
 function App() {
   const [count, setCount] = useState(0);
@@ -88,7 +89,7 @@ function App() {
 
             {data.high}
 
-            <BuyButton />
+            <BuyButton /> <Input />
           
             {data.volume} 
             <br/>

@@ -1,7 +1,8 @@
 import React from 'react'
 import {Grid, Segment} from 'semantic-ui-react'
 
-export default function GridEqualWidth() {
+function GridEqualWidth() {
+    return(
     <Grid columns='equal'>
         <Grid.Column>
             <Segment>1</Segment>
@@ -15,4 +16,7 @@ export default function GridEqualWidth() {
             <Segment>3</Segment>
         </Grid.Column>
     </Grid>
+    );
 }
+
+export default GridEqualWidth

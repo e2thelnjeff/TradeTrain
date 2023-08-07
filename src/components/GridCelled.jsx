@@ -1,7 +1,9 @@
 import React from 'react'
 import {Grid,Image} from 'semantic-ui-react'
 
-export default function GridCelled() {
+function GridCelled() {
+    
+   return( 
     <div>
         <Grid>
     
@@ -23,5 +25,7 @@ export default function GridCelled() {
 
         </Grid>
     </div>
-    
+   );
 }      
+
+export default GridCelled
