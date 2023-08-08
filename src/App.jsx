@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import './App.css'
+import './styles/App.css'
 import GridEqualWidth from './components/GridEqualWidth.jsx'
 import BuyButton from './components/BuyButton'
 import SellButton from './components/SellButton'
