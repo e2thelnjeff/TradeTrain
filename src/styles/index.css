@@ -60,6 +60,29 @@ button:focus-visible, #nextQuote {
   color: rgba(255, 255, 255, 0.87);
 }
 
+button, #buy {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: .8em, 1.6em;
+  font-size: 4em;
+  font-weight: 700;
+  font-family: inherit;
+  background-color:rgb(29, 136, 57);
+  cursor: pointer;
+  transition: border-color .25s;
+}
+
+button, #sell {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: .8em, 1.6em;
+  font-size: 4em;
+  font-weight: 700;
+  font-family: inherit;
+  background-color:rgb(215, 16, 16);
+  cursor: pointer;
+  transition: border-color .25s;
+}
 
 /*
 @media (prefers-color-scheme: light) {

@@ -13,6 +13,7 @@ function App() {
   const [symbol_days, setSymbolDays] = useState([]);
   const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
   const API_URL = 'http://localhost:3000/api'
+  const [position, setPosition] = useState(0);
 
   if (symbol_days.length == 0) {
     getSymbol_Days()
@@ -24,6 +25,15 @@ function App() {
     setSymbolDays(response.file_names)
   }
 
+  async function buy(quantity){
+    setPosition((position)=>position+quantity);
+    //it's not picking up the newPosition quickly enough
+    
+  }
+
+  async function sell(quantity){
+    setPosition((position)=>position-quantity);
+  }
 
   async function getQuote(){
 
@@ -42,7 +52,6 @@ function App() {
     const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res)=>res.json());
     
     console.log("drum roll");
-    console.log("Close price is: " + results.close);
     
     setData(results);
   };
@@ -65,18 +74,26 @@ function App() {
           <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
         </p>
 
-            {data.high}
+        <table id="screen">
+          <tbody>
+            <tr>
+              {data.high}
+            </tr>
+            <tr>
+              {data.close} {data.volume}
+            </tr>
+            <tr>
+            <button id="buy" onClick={()=>buy(1000)}>BUY</button>
+            {console.log('from the HTML the position is: ' + position)}
+            <button id="sell" onClick={()=>sell(500)}>SELL</button>
+            {console.log('from the HTML the position is: ' + position)}
+            </tr>
+          </tbody>
+        </table>
 
-            <BuyButton /> <Input />
-          
-            {data.volume} 
-            <br/>
-            {data.close}
-          
-          
-          <SellButton />
-            {data.low}
-
+        <Input />
+        <br/>
+        {data.low}
       </div>
     </>
   )
