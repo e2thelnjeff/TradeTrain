@@ -51,7 +51,7 @@ function App() {
     <>
       <div>
         <h1>{data.symbol}</h1>
-        
+
         <p>
           <select className="ui dropdown" title='Symbol Day' id='symbo_day_selection' onChange={()=>setSelectedSymbolDay(symbo_day_selection.value)}>
             {symbol_days.map((symbol_day, i)=>{
@@ -62,7 +62,7 @@ function App() {
         <PriceTable data={data}/>
         <br/>
         <p>
-          <button onClick={() => getQuote()}>Get Next Price</button>
+          <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
         </p>
 
             {data.high}
