@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import './styles/App.css'
-import GridEqualWidth from './components/GridEqualWidth.jsx'
 import BuyButton from './components/BuyButton'
 import SellButton from './components/SellButton'
 import Input from './components/Input'
 import PriceTable from './components/PriceTable'
+import TradeInterface from './components/TradeInterface'
 
 function App() {
   const [count, setCount] = useState(0);
@@ -74,26 +74,18 @@ function App() {
           <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
         </p>
 
-        <table id="screen">
+        <TradeInterface data={{data, position}} />
+
+        <table>
           <tbody>
             <tr>
-              {data.high}
-            </tr>
-            <tr>
-              {data.close} {data.volume}
-            </tr>
-            <tr>
             <button id="buy" onClick={()=>buy(1000)}>BUY</button>
-            {console.log('from the HTML the position is: ' + position)}
             <button id="sell" onClick={()=>sell(500)}>SELL</button>
-            {console.log('from the HTML the position is: ' + position)}
             </tr>
           </tbody>
         </table>
 
         <Input />
-        <br/>
-        {data.low}
       </div>
     </>
   )
