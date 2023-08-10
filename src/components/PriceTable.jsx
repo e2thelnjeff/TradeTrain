@@ -1,7 +1,7 @@
 import React from "react";
 
 function PriceTable(data){
-    data = data.data
+    data = data.data;
     
 
     return(

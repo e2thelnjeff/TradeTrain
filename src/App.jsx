@@ -11,18 +11,18 @@ function App() {
   const [data, setData] = useState([]);
   const [symbol_days, setSymbolDays] = useState([]);
   const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
-  const API_URL = 'http://localhost:3000/api'
+  const API_URL = 'http://localhost:3000/api';
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
 
   if (symbol_days.length == 0) {
-    getSymbol_Days()
+    getSymbol_Days();
   }
 
   async function getSymbol_Days(){
     const response = await fetch(`${API_URL}/get_symbol_days`).then((res)=>res.json());
     //symbol_days.file_names.forEach((element)=>console.log(element));
-    setSymbolDays(response.file_names)
+    setSymbolDays(response.file_names);
   }
 
   async function buy(quantity,price){
@@ -35,7 +35,7 @@ function App() {
 
   async function sell(quantity,price){
     setPosition((position)=>position-quantity);
-    setCostBasis((costBasis)=>(costBasis*position+quantity*price)/(position+quantity)) 
+    setCostBasis((costBasis)=>(costBasis*position+quantity*price)/(position+quantity));
     // may need to call aaseparate function to set ccost basis b of lags
   }
 
