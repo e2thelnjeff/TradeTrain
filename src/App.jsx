@@ -14,6 +14,7 @@ function App() {
   const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
   const API_URL = 'http://localhost:3000/api'
   const [position, setPosition] = useState(0);
+  const [costBasis, setCostBasis] = useState(0);
 
   if (symbol_days.length == 0) {
     getSymbol_Days()
@@ -25,14 +26,18 @@ function App() {
     setSymbolDays(response.file_names)
   }
 
-  async function buy(quantity){
+  async function buy(quantity,price){
     setPosition((position)=>position+quantity);
-    //it's not picking up the newPosition quickly enough
-    
+    //it's not picking up the new position quickly enough within this function
+
+    setCostBasis((costBasis)=>(costBasis*position+quantity*price)/(position+quantity));
+    //console.log('costBasis is now: ' + costBasis);
   }
 
-  async function sell(quantity){
+  async function sell(quantity,price){
     setPosition((position)=>position-quantity);
+    setCostBasis((costBasis)=>(costBasis*position+quantity*price)/(position+quantity)) 
+    // may need to call aaseparate function to set ccost basis b of lags
   }
 
   async function getQuote(){
@@ -74,18 +79,21 @@ function App() {
           <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
         </p>
 
-        <TradeInterface data={{data, position}} />
+        <TradeInterface data={data} position={position} costBasis={costBasis}/>
 
         <table>
           <tbody>
             <tr>
-            <button id="buy" onClick={()=>buy(1000)}>BUY</button>
-            <button id="sell" onClick={()=>sell(500)}>SELL</button>
+            <button id="buy" onClick={()=>buy(1000,data.close)}>BUY</button>
+            {console.log('HTML cost basis is now: ' + costBasis)}
+            <button id="sell" onClick={()=>sell(500,data.close)}>SELL</button>
             </tr>
           </tbody>
         </table>
 
         <Input />
+        <br/>
+        {costBasis}
       </div>
     </>
   )
