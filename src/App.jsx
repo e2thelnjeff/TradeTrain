@@ -9,7 +9,6 @@ import TradeInterface from './components/TradeInterface'
 function App() {
   const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
-  const [index, setIndex] = useState(0);
   const [symbol_days, setSymbolDays] = useState([]);
   const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
   const API_URL = 'http://localhost:3000/api'
@@ -43,16 +42,6 @@ function App() {
   async function getQuote(){
 
     setCount((count)=>count+1);
-
-    const postOptions = {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'
-        },
-      body: JSON.stringify(count)
-    };
-
-    //const postResponse = await fetch('http://localhost:3000/api',postOptions);
 
     const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res)=>res.json());
     
