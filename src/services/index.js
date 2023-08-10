@@ -27,6 +27,20 @@ app.get("/api",function(req, res){
     res.send(currentQuote);
 });
 
+app.get("/api/get_x_bars",function(req, res){
+    end = req.query.end;
+    symbol_day = req.query.symbol_day;
+    let symbol = symbol_day.slice(symbol_day.indexOf('_') + 1);
+    if (symbol_day) {
+        quotes = require(`./trade_data/${symbol_day}.json`);
+    }
+    
+    const listOfSymbolDayMinutes = quotes.slice(0, end);
+    listOfSymbolDayMinutes.symbol = symbol;
+
+    res.send(listOfSymbolDayMinutes);
+});
+
 app.get("/api/get_symbol_days",function(req, res){
     fs.readdir(path.join(__dirname, 'trade_data'), (err, files)=>{
         if (err) {
