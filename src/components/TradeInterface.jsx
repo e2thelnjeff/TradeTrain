@@ -2,8 +2,8 @@ import React from 'react';
 //import BuyButton from '.';
 
 
-function TradeInterface({data,position,costBasis}) {
-    const pnl = (position*(data.close-costBasis)).toFixed(2)
+function TradeInterface({data,position,costBasis,bookPnl}) {
+    const pnl = (bookPnl+position*(data.close-costBasis)).toFixed(2);
     
     return(
         <table>
@@ -29,4 +29,4 @@ function TradeInterface({data,position,costBasis}) {
     )
 }
 
-export default TradeInterface;
+export default TradeInterface;                                                                  

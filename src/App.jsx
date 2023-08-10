@@ -15,6 +15,7 @@ function App() {
   const API_URL = 'http://localhost:3000/api'
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
+  const [bookPnl, setBookPnl] = useState(0);
 
   if (symbol_days.length == 0) {
     getSymbol_Days()
@@ -26,7 +27,50 @@ function App() {
     setSymbolDays(response.file_names)
   }
 
-  async function buy(quantity,price){
+  async function buyTrade(quantity,price){
+    if (position < 0) {
+      if (quantity >= abs(position)){
+        //this means they're short and buying to get flat or flip (i.e. open) long
+        setBookPnl((bookPnl)=>bookPnl+(costBasis-data.close)*abs(position));
+        setPosition((position)=>position+quantity);
+        position+quantity == 0 ? setCostBasis(()=>0) : setCostBasis(()=>data.close);
+      } else{
+        //this else they're short and buying to close
+        //this else implies quantity < abs(position)
+        setBookPnl((bookPnl)=>bookPnl+(costBasis-data.close)*quantity);
+        setPosition((position)=>position+quantity);
+        //costBasis wouldn't change
+        }
+      } else{
+          //implies their position is flat or long
+          //no pnl to book
+          setPosition((position)=>position+quantity);
+          position == 0 ? setCostBasis(()=>data.close) : setCostBasis((costBasis)=>((costBasis*position)+(quantity*data.close))/(quantity+position));
+        }
+    };
+
+  async function sellTrade(quantity,price){
+    if (position > 0){
+      if (quantity >= position){
+          setBookPnl((bookPnl)=>bookPnl+(data.close-costBasis)*position);
+          setPosition((position)=>position+quantity);
+          position+quantity == 0 ? setCostBasis(()=>0) : setCostBasis(()=>data.close);
+        } else{
+          //long and selling to close
+          setBookPnl((bookPnl)=>bookPnl+(data.close-costBasis)*quantity);
+          setPosition((position)=>position-quantity);
+          //costBasis wouldn't change
+        }
+    } else{
+          //implies their position is flat or short
+          //no pnl to book
+          setPosition((position)=>position+quantity);
+          position == 0 ? setCostBasis(()=>data.close) : setCostBasis((costBasis)=>((costBasis*abs(position))+(quantity*data.close))/(quantity+abs(position)));          
+      }
+  };
+
+  
+  /*async function buy(quantity,price){
     setPosition((position)=>position+quantity);
     //it's not picking up the new position quickly enough within this function
 
@@ -39,6 +83,7 @@ function App() {
     setCostBasis((costBasis)=>(costBasis*position+quantity*price)/(position+quantity)) 
     // may need to call aaseparate function to set ccost basis b of lags
   }
+  */
 
   async function getQuote(){
 
@@ -79,14 +124,13 @@ function App() {
           <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
         </p>
 
-        <TradeInterface data={data} position={position} costBasis={costBasis}/>
+        <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl}/>
 
         <table>
           <tbody>
             <tr>
-            <button id="buy" onClick={()=>buy(1000,data.close)}>BUY</button>
-            {console.log('HTML cost basis is now: ' + costBasis)}
-            <button id="sell" onClick={()=>sell(500,data.close)}>SELL</button>
+            <button id="buy" onClick={()=>buyTrade(1000,data.close)}>BUY</button>
+            <button id="sell" onClick={()=>sellTrade(500,data.close)}>SELL</button>
             </tr>
           </tbody>
         </table>
