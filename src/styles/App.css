@@ -48,3 +48,8 @@ div#buyAndSell {
 #symbol_day_selection {
   margin: 20px;
 }
+
+#tradeInterface {
+  width: 500px;
+  margin: auto;
+}
