@@ -124,8 +124,6 @@ function App() {
           })}
         </select>
       </p>
-      
-      <br/>
       <p>
         <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
       </p>
