@@ -5,6 +5,9 @@ import SellButton from './components/SellButton'
 import Input from './components/Input'
 import PriceTable from './components/PriceTable'
 import TradeInterface from './components/TradeInterface'
+import {Bar} from 'react-chartjs-2'
+import Chart from 'chart.js/auto'
+import { Grid } from 'semantic-ui-react'
 
 function App() {
   const [count, setCount] = useState(0);
@@ -14,6 +17,8 @@ function App() {
   const API_URL = 'http://localhost:3000/api';
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
+  const [chartData, setChartData] = useState({datasets: []});
+  const [chartOptions, setChartOptions] = useState();
 
   if (symbol_days.length == 0) {
     getSymbol_Days();
@@ -50,40 +55,90 @@ function App() {
     setData(results);
   };
 
+  async function getChartData(symbol_day) {
+    const results = await fetch(`${API_URL}/get_x_bars?end=${count}&symbol_day=${symbol_day}`).then((res)=>res.json());
+    console.log(`Getting new chart data...`);
+    let closeData = results.map((item) => item['close'])
+    let min = Math.min(...closeData) - 0.5 // setting the minimum chart value to a little less than our lowest value
+    let chartOptions = {
+      responseive: true,
+      plugins: {
+        legend: {
+          position: 'top'
+        },
+        title: {
+          display: true,
+          text: symbol_day,
+        }
+      },
+      scales: {
+        yAxis: {
+          min: min
+        }
+      }
+    }
+
+    setChartOptions(chartOptions);
+
+    setChartData({
+        labels: results.map((item)=>[item['date']]),
+        datasets: [{
+          label: results[0]['symbol'],
+          data: closeData,
+          borderColor: "black",
+          backgroundColor: "red"
+        }]
+      }
+    );
+  }
+
+  function handleSymbolDaySelection() {
+      setSelectedSymbolDay(symbol_day_selection.value)
+      setTimeout(()=>{
+        getChartData(symbol_day_selection.value)
+      }, 1000);
+      setTimeout(()=>console.log(chartData, symbol_day_selection.value, chartOptions), 2000)
+      
+      
+  }
+
+
   return (
     <>
-      <div>
-        <h1>{data.symbol}</h1>
+      <Grid columns={2}>
+        <Grid.Column>
+          <h1>{data.symbol}</h1>
+          <div id='chartContainer'>
+            <Bar options={chartOptions} data={chartData} id='bar'/>
+          </div>
+        </Grid.Column>
 
-        <p>
-          <select className="ui dropdown" title='Symbol Day' id='symbo_day_selection' onChange={()=>setSelectedSymbolDay(symbo_day_selection.value)}>
-            {symbol_days.map((symbol_day, i)=>{
-              return <option className='item' key={i} >{symbol_day}</option>
-            })}
-          </select>
-        </p>
-        <PriceTable data={data}/>
-        <br/>
-        <p>
-          <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
-        </p>
+        <Grid.Column>
+          <PriceTable data={data}/>
+        </Grid.Column>
+      </Grid>
+      <p>
+        <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
+          {symbol_days.map((symbol_day, i)=>{
+            return <option className='item' key={i} >{symbol_day}</option>
+          })}
+        </select>
+      </p>
+      
+      <br/>
+      <p>
+        <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
+      </p>
 
-        <TradeInterface data={data} position={position} costBasis={costBasis}/>
-
-        <table>
-          <tbody>
-            <tr>
-            <button id="buy" onClick={()=>buy(1000,data.close)}>BUY</button>
-            {console.log('HTML cost basis is now: ' + costBasis)}
-            <button id="sell" onClick={()=>sell(500,data.close)}>SELL</button>
-            </tr>
-          </tbody>
-        </table>
-
-        <Input />
-        <br/>
-        {costBasis}
+      <TradeInterface data={data} position={position} costBasis={costBasis}/>
+      <div id='buyAndSell'>
+          <button id="buy" onClick={()=>buy(1000,data.close)}>BUY</button>
+          {console.log('HTML cost basis is now: ' + costBasis)}
+          <button id="sell" onClick={()=>sell(500,data.close)}>SELL</button>
       </div>
+      <Input />
+      <br/>
+      {costBasis}
     </>
   )
 };
