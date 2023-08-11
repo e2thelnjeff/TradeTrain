@@ -38,3 +38,13 @@ div#buyAndSell {
   display: flex;
   align-items: flex-end;
 }
+
+#priceTable {
+  position: absolute;
+  bottom: 0;
+  padding: 20px;
+}
+
+#symbol_day_selection {
+  margin: 20px;
+}

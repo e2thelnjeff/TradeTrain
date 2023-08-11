@@ -5,7 +5,7 @@ function PriceTable(data){
     
 
     return(
-      <table>
+      <table id="priceTable">
         <tbody>
           <tr>
             <td>Date: </td>
