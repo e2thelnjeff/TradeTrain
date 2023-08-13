@@ -115,14 +115,15 @@ function App() {
     }
 
     setChartOptions(chartOptions);
-
+    console.log(results);
     setChartData({
       labels: results.map((item) => [
         // convert full utc to HH:MM format in NYSE time
         `${new Date(item['date']).getUTCHours() - 4}:${new Date(item['date']).getUTCMinutes()}`
       ]),
+      
       datasets: [{
-        label: results[0]['symbol'],
+        label: symbol_day.slice(symbol_day.indexOf('_') + 1), // slicing symbol out of symbol day
         data: closeData,
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)'
