@@ -18,7 +18,7 @@ function App() {
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
   const [chartData, setChartData] = useState({ datasets: [] });
-  const [chartOptions, setChartOptions] = useState();
+  const [chartOptions, setChartOptions] = useState({ responseive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: "", } }, scales: { yAxis: { min: 0 } } });
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(0);
 
@@ -78,16 +78,17 @@ function App() {
     }
   };
 
-  async function getQuote(increment=false) {
+  async function getQuote(increment=false, symbolday=selected_symbol_day) {
     if (increment) {
       setCount((count) => count + 1);
     }
-    const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res) => res.json());
+    
+    const results = await fetch(`${API_URL}?count=${count}&symbol_day=${symbolday}`).then((res) => res.json());
 
     console.log("drum roll");
 
     setData(results);
-    getChartData(selected_symbol_day);
+    getChartData(symbolday);
   };
 
   async function getChartData(symbol_day) {
@@ -128,12 +129,12 @@ function App() {
   }
 
   function handleSymbolDaySelection() {
-    setSelectedSymbolDay(symbol_day_selection.value)
+    setSelectedSymbolDay(symbol_day_selection.value);
+    setTimeout(()=>getQuote(false, symbol_day_selection.value), 1000);
     setTimeout(() => {
-      getChartData(symbol_day_selection.value)
-      getQuote();
-    }, 1000);
-    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 2000);
+      getChartData(symbol_day_selection.value);
+    }, 2000);
+    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 3000);
   }
 
 
@@ -157,7 +158,7 @@ function App() {
         })}
       </select>
       <p>
-        <button id="nextQuote" onClick={() => getQuote(increment=true)}>Get Next Price</button>
+        <button id="nextQuote" onClick={() => getQuote(true)}>Get Next Price</button>
       </p>
 
       <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
