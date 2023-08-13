@@ -35,7 +35,7 @@ app.get("/api/get_x_bars",function(req, res){
         quotes = require(`./trade_data/${symbol_day}.json`);
     }
     
-    const listOfSymbolDayMinutes = quotes.slice(0, end);
+    const listOfSymbolDayMinutes = quotes.slice(0, end+1);
     listOfSymbolDayMinutes.symbol = symbol;
 
     res.send(listOfSymbolDayMinutes);

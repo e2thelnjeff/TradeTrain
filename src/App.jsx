@@ -87,6 +87,7 @@ function App() {
     console.log("drum roll");
 
     setData(results);
+    getChartData(selected_symbol_day);
   };
 
   async function getChartData(symbol_day) {
@@ -171,7 +172,6 @@ function App() {
       <p>
         {costBasis}
       </p>
-      
     </>
   )
 };
