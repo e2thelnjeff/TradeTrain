@@ -14,7 +14,7 @@
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 100%;
+  font-size: large;
 }
 
 td, th {
@@ -42,6 +42,7 @@ div#buyAndSell {
 #priceTable {
   position: absolute;
   bottom: 0;
+  right: 0;
   padding: 20px;
 }
 
