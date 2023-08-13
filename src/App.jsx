@@ -6,6 +6,7 @@ import Input from './components/Input'
 import PriceTable from './components/PriceTable'
 import TradeInterface from './components/TradeInterface'
 
+
 function App() {
   const [count, setCount] = useState(0);
   const [data, setData] = useState([]);
@@ -16,6 +17,12 @@ function App() {
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
   const [bookPnl, setBookPnl] = useState(0);
+  const [tradeQuantity, setTradeQuantity] = useState(0);
+
+  const handleTradeQuantityChange = (event) =>{
+    //console.log('datatype is: ' + typeof event.target.value); 
+    setTradeQuantity(parseInt(event.target.value));
+  }
 
   if (symbol_days.length == 0) {
     getSymbol_Days()
@@ -27,16 +34,15 @@ function App() {
     setSymbolDays(response.file_names)
   }
 
-  async function buyTrade(quantity,price){
+  async function buyTrade(quantity){
     if (position < 0) {
-      if (quantity >= abs(position)){
+      if (quantity >= Math.abs(position)){
         //this means they're short and buying to get flat or flip (i.e. open) long
-        setBookPnl((bookPnl)=>bookPnl+(costBasis-data.close)*abs(position));
+        setBookPnl((bookPnl)=>bookPnl+(costBasis-data.close)*Math.abs(position));
         setPosition((position)=>position+quantity);
         position+quantity == 0 ? setCostBasis(()=>0) : setCostBasis(()=>data.close);
       } else{
-        //this else they're short and buying to close
-        //this else implies quantity < abs(position)
+        //this else means they're short and buying to close
         setBookPnl((bookPnl)=>bookPnl+(costBasis-data.close)*quantity);
         setPosition((position)=>position+quantity);
         //costBasis wouldn't change
@@ -49,12 +55,12 @@ function App() {
         }
     };
 
-  async function sellTrade(quantity,price){
+  async function sellTrade(quantity){
     if (position > 0){
       if (quantity >= position){
           setBookPnl((bookPnl)=>bookPnl+(data.close-costBasis)*position);
-          setPosition((position)=>position+quantity);
-          position+quantity == 0 ? setCostBasis(()=>0) : setCostBasis(()=>data.close);
+          setPosition((position)=>position-quantity);
+          position-quantity == 0 ? setCostBasis(()=>0) : setCostBasis(()=>data.close);
         } else{
           //long and selling to close
           setBookPnl((bookPnl)=>bookPnl+(data.close-costBasis)*quantity);
@@ -64,26 +70,10 @@ function App() {
     } else{
           //implies their position is flat or short
           //no pnl to book
-          setPosition((position)=>position+quantity);
-          position == 0 ? setCostBasis(()=>data.close) : setCostBasis((costBasis)=>((costBasis*abs(position))+(quantity*data.close))/(quantity+abs(position)));          
+          setPosition((position)=>position-quantity);
+          position == 0 ? setCostBasis(()=>data.close) : setCostBasis((costBasis)=>((costBasis*Math.abs(position))+(quantity*data.close))/(quantity+Math.abs(position)));          
       }
   };
-
-  
-  /*async function buy(quantity,price){
-    setPosition((position)=>position+quantity);
-    //it's not picking up the new position quickly enough within this function
-
-    setCostBasis((costBasis)=>(costBasis*position+quantity*price)/(position+quantity));
-    //console.log('costBasis is now: ' + costBasis);
-  }
-
-  async function sell(quantity,price){
-    setPosition((position)=>position-quantity);
-    setCostBasis((costBasis)=>(costBasis*position+quantity*price)/(position+quantity)) 
-    // may need to call aaseparate function to set ccost basis b of lags
-  }
-  */
 
   async function getQuote(){
 
@@ -129,13 +119,13 @@ function App() {
         <table>
           <tbody>
             <tr>
-            <button id="buy" onClick={()=>buyTrade(1000,data.close)}>BUY</button>
-            <button id="sell" onClick={()=>sellTrade(500,data.close)}>SELL</button>
+            <button id="buy" onClick={()=>buyTrade(tradeQuantity)}>BUY</button>
+            <button id="sell" onClick={()=>sellTrade(tradeQuantity)}>SELL</button>
             </tr>
           </tbody>
         </table>
 
-        <Input />
+        <input type='number' id='tradeQuantity' onChange={handleTradeQuantityChange} />
         <br/>
         {costBasis}
       </div>
