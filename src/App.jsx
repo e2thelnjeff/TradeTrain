@@ -86,6 +86,7 @@ function App() {
     const results = await fetch(`${API_URL}?count=${count}&symbol_day=${symbolday}`).then((res) => res.json());
 
     console.log("drum roll");
+    console.log(results);
 
     setData(results);
     getChartData(symbolday);
@@ -115,7 +116,6 @@ function App() {
     }
 
     setChartOptions(chartOptions);
-    console.log(results);
     setChartData({
       labels: results.map((item) => [
         // convert full utc to HH:MM format in NYSE time
