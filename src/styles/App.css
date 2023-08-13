@@ -55,3 +55,7 @@ div#buyAndSell {
   width: 500px;
   margin: auto;
 }
+
+#line {
+  min-height: 300px;
+}
