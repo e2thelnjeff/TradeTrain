@@ -5,7 +5,7 @@ import SellButton from './components/SellButton'
 import Input from './components/Input'
 import PriceTable from './components/PriceTable'
 import TradeInterface from './components/TradeInterface'
-import {Bar} from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import Chart from 'chart.js/auto'
 import { Grid } from 'semantic-ui-react'
 
@@ -17,12 +17,12 @@ function App() {
   const API_URL = 'http://localhost:3000/api';
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
-  const [chartData, setChartData] = useState({datasets: []});
+  const [chartData, setChartData] = useState({ datasets: [] });
   const [chartOptions, setChartOptions] = useState();
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(0);
 
-  const handleTradeQuantityChange = (event) =>{
+  const handleTradeQuantityChange = (event) => {
     //console.log('datatype is: ' + typeof event.target.value); 
     setTradeQuantity(parseInt(event.target.value));
   }
@@ -31,66 +31,66 @@ function App() {
     getSymbol_Days();
   }
 
-  async function getSymbol_Days(){
-    const response = await fetch(`${API_URL}/get_symbol_days`).then((res)=>res.json());
+  async function getSymbol_Days() {
+    const response = await fetch(`${API_URL}/get_symbol_days`).then((res) => res.json());
     //symbol_days.file_names.forEach((element)=>console.log(element));
     setSymbolDays(response.file_names);
   }
 
-  async function buyTrade(quantity){
+  async function buyTrade(quantity) {
     if (position < 0) {
-      if (quantity >= Math.abs(position)){
+      if (quantity >= Math.abs(position)) {
         //this means they're short and buying to get flat or flip (i.e. open) long
-        setBookPnl((bookPnl)=>bookPnl+(costBasis-data.close)*Math.abs(position));
-        setPosition((position)=>position+quantity);
-        position+quantity == 0 ? setCostBasis(()=>0) : setCostBasis(()=>data.close);
-      } else{
+        setBookPnl((bookPnl) => bookPnl + (costBasis - data.close) * Math.abs(position));
+        setPosition((position) => position + quantity);
+        position + quantity == 0 ? setCostBasis(() => 0) : setCostBasis(() => data.close);
+      } else {
         //this else means they're short and buying to close
-        setBookPnl((bookPnl)=>bookPnl+(costBasis-data.close)*quantity);
-        setPosition((position)=>position+quantity);
+        setBookPnl((bookPnl) => bookPnl + (costBasis - data.close) * quantity);
+        setPosition((position) => position + quantity);
         //costBasis wouldn't change
-        }
-      } else{
-          //implies their position is flat or long
-          //no pnl to book
-          setPosition((position)=>position+quantity);
-          position == 0 ? setCostBasis(()=>data.close) : setCostBasis((costBasis)=>((costBasis*position)+(quantity*data.close))/(quantity+position));
-        }
-    };
-
-  async function sellTrade(quantity){
-    if (position > 0){
-      if (quantity >= position){
-          setBookPnl((bookPnl)=>bookPnl+(data.close-costBasis)*position);
-          setPosition((position)=>position-quantity);
-          position-quantity == 0 ? setCostBasis(()=>0) : setCostBasis(()=>data.close);
-        } else{
-          //long and selling to close
-          setBookPnl((bookPnl)=>bookPnl+(data.close-costBasis)*quantity);
-          setPosition((position)=>position-quantity);
-          //costBasis wouldn't change
-        }
-    } else{
-          //implies their position is flat or short
-          //no pnl to book
-          setPosition((position)=>position-quantity);
-          position == 0 ? setCostBasis(()=>data.close) : setCostBasis((costBasis)=>((costBasis*Math.abs(position))+(quantity*data.close))/(quantity+Math.abs(position)));          
       }
+    } else {
+      //implies their position is flat or long
+      //no pnl to book
+      setPosition((position) => position + quantity);
+      position == 0 ? setCostBasis(() => data.close) : setCostBasis((costBasis) => ((costBasis * position) + (quantity * data.close)) / (quantity + position));
+    }
   };
 
-  async function getQuote(){
+  async function sellTrade(quantity) {
+    if (position > 0) {
+      if (quantity >= position) {
+        setBookPnl((bookPnl) => bookPnl + (data.close - costBasis) * position);
+        setPosition((position) => position - quantity);
+        position - quantity == 0 ? setCostBasis(() => 0) : setCostBasis(() => data.close);
+      } else {
+        //long and selling to close
+        setBookPnl((bookPnl) => bookPnl + (data.close - costBasis) * quantity);
+        setPosition((position) => position - quantity);
+        //costBasis wouldn't change
+      }
+    } else {
+      //implies their position is flat or short
+      //no pnl to book
+      setPosition((position) => position - quantity);
+      position == 0 ? setCostBasis(() => data.close) : setCostBasis((costBasis) => ((costBasis * Math.abs(position)) + (quantity * data.close)) / (quantity + Math.abs(position)));
+    }
+  };
 
-    setCount((count)=>count+1);
+  async function getQuote() {
 
-    const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res)=>res.json());
-    
+    setCount((count) => count + 1);
+
+    const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res) => res.json());
+
     console.log("drum roll");
-    
+
     setData(results);
   };
 
   async function getChartData(symbol_day) {
-    const results = await fetch(`${API_URL}/get_x_bars?end=${count}&symbol_day=${symbol_day}`).then((res)=>res.json());
+    const results = await fetch(`${API_URL}/get_x_bars?end=${count}&symbol_day=${symbol_day}`).then((res) => res.json());
     console.log(`Getting new chart data...`);
     let closeData = results.map((item) => item['close'])
     let min = Math.min(...closeData) - 0.5 // setting the minimum chart value to a little less than our lowest value
@@ -115,25 +115,25 @@ function App() {
     setChartOptions(chartOptions);
 
     setChartData({
-        labels: results.map((item)=>[item['date']]),
-        datasets: [{
-          label: results[0]['symbol'],
-          data: closeData,
-          borderColor: "black",
-          backgroundColor: "red"
-        }]
-      }
+      labels: results.map((item) => [item['date']]),
+      datasets: [{
+        label: results[0]['symbol'],
+        data: closeData,
+        borderColor: "black",
+        backgroundColor: "red"
+      }]
+    }
     );
   }
 
   function handleSymbolDaySelection() {
-      setSelectedSymbolDay(symbol_day_selection.value)
-      setTimeout(()=>{
-        getChartData(symbol_day_selection.value)
-      }, 1000);
-      setTimeout(()=>console.log(chartData, symbol_day_selection.value, chartOptions), 2000)
-      
-      
+    setSelectedSymbolDay(symbol_day_selection.value)
+    setTimeout(() => {
+      getChartData(symbol_day_selection.value)
+    }, 1000);
+    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 2000)
+
+
   }
 
 
@@ -143,17 +143,17 @@ function App() {
         <Grid.Column>
           <h1>{data.symbol}</h1>
           <div id='chartContainer'>
-            <Bar options={chartOptions} data={chartData} id='bar'/>
+            <Bar options={chartOptions} data={chartData} id='bar' />
           </div>
         </Grid.Column>
 
         <Grid.Column>
-          <PriceTable data={data}/>
+          <PriceTable data={data} />
         </Grid.Column>
       </Grid>
       <p>
         <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
-          {symbol_days.map((symbol_day, i)=>{
+          {symbol_days.map((symbol_day, i) => {
             return <option className='item' key={i} >{symbol_day}</option>
           })}
         </select>
@@ -162,21 +162,20 @@ function App() {
         <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
       </p>
 
-        <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl}/>
+      <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
 
-        <table>
-          <tbody>
-            <tr>
-            <button id="buy" onClick={()=>buyTrade(tradeQuantity)}>BUY</button>
-            <button id="sell" onClick={()=>sellTrade(tradeQuantity)}>SELL</button>
-            </tr>
-          </tbody>
-        </table>
+      <table>
+        <tbody>
+          <tr>
+            <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
+            <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
+          </tr>
+        </tbody>
+      </table>
 
-        <input type='number' id='tradeQuantity' onChange={handleTradeQuantityChange} />
-        <br/>
-        {costBasis}
-      </div>
+      <input type='number' id='tradeQuantity' onChange={handleTradeQuantityChange} />
+      <br />
+      {costBasis}
     </>
   )
 };
