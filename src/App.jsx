@@ -117,7 +117,10 @@ function App() {
     setChartOptions(chartOptions);
 
     setChartData({
-      labels: results.map((item) => [item['date']]),
+      labels: results.map((item) => [
+        // convert full utc to HH:MM format in NYSE time
+        `${new Date(item['date']).getUTCHours() - 4}:${new Date(item['date']).getUTCMinutes()}`
+      ]),
       datasets: [{
         label: results[0]['symbol'],
         data: closeData,
