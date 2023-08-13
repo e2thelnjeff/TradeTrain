@@ -151,31 +151,27 @@ function App() {
           <PriceTable data={data} />
         </Grid.Column>
       </Grid>
-      <p>
-        <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
-          {symbol_days.map((symbol_day, i) => {
-            return <option className='item' key={i} >{symbol_day}</option>
-          })}
-        </select>
-      </p>
+      <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
+        {symbol_days.map((symbol_day, i) => {
+          return <option className='item' key={i} >{symbol_day}</option>
+        })}
+      </select>
       <p>
         <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
       </p>
 
       <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
 
-      <table>
-        <tbody>
-          <tr>
-            <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
-            <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
-          </tr>
-        </tbody>
-      </table>
+      <div id='buyAndSell'>
+        <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
+        <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
+      </div>
 
       <input type='number' id='tradeQuantity' onChange={handleTradeQuantityChange} />
-      <br />
-      {costBasis}
+      <p>
+        {costBasis}
+      </p>
+      
     </>
   )
 };
