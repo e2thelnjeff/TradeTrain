@@ -28,7 +28,7 @@ app.get("/api",function(req, res){
 });
 
 app.get("/api/get_x_bars",function(req, res){
-    end = req.query.end;
+    end = parseInt(req.query.end);
     symbol_day = req.query.symbol_day;
     let symbol = symbol_day.slice(symbol_day.indexOf('_') + 1);
     if (symbol_day) {

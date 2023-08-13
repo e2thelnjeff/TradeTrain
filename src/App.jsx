@@ -78,10 +78,10 @@ function App() {
     }
   };
 
-  async function getQuote() {
-
-    setCount((count) => count + 1);
-
+  async function getQuote(increment=false) {
+    if (increment) {
+      setCount((count) => count + 1);
+    }
     const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res) => res.json());
 
     console.log("drum roll");
@@ -131,10 +131,9 @@ function App() {
     setSelectedSymbolDay(symbol_day_selection.value)
     setTimeout(() => {
       getChartData(symbol_day_selection.value)
+      getQuote();
     }, 1000);
-    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 2000)
-
-
+    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 2000);
   }
 
 
@@ -158,7 +157,7 @@ function App() {
         })}
       </select>
       <p>
-        <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
+        <button id="nextQuote" onClick={() => getQuote(increment=true)}>Get Next Price</button>
       </p>
 
       <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
