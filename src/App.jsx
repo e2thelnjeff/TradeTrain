@@ -5,7 +5,7 @@ import SellButton from './components/SellButton'
 import Input from './components/Input'
 import PriceTable from './components/PriceTable'
 import TradeInterface from './components/TradeInterface'
-import { Bar } from 'react-chartjs-2'
+import { Bar, Line } from 'react-chartjs-2'
 import Chart from 'chart.js/auto'
 import { Grid } from 'semantic-ui-react'
 
@@ -119,8 +119,8 @@ function App() {
       datasets: [{
         label: results[0]['symbol'],
         data: closeData,
-        borderColor: "black",
-        backgroundColor: "red"
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)'
       }]
     }
     );
@@ -143,7 +143,7 @@ function App() {
         <Grid.Column>
           <h1>{data.symbol}</h1>
           <div id='chartContainer'>
-            <Bar options={chartOptions} data={chartData} id='bar' />
+            <Line options={chartOptions} data={chartData} id='line' />
           </div>
         </Grid.Column>
 
