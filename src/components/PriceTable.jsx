@@ -1,11 +1,11 @@
 import React from "react";
 
 function PriceTable(data){
-    data = data.data
+    data = data.data;
     
 
     return(
-      <table>
+      <table id="priceTable">
         <tbody>
           <tr>
             <td>Date: </td>

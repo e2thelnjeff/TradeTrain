@@ -6,7 +6,7 @@ function TradeInterface({data,position,costBasis,bookPnl}) {
     const pnl = (bookPnl+position*(data.close-costBasis)).toFixed(2);
     
     return(
-        <table>
+        <table id="tradeInterface">
             <tbody>
                 <tr>
                     <th><h2>Volume</h2></th>

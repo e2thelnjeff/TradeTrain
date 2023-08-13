@@ -1,5 +1,5 @@
 #root {
-  max-width: 1280px;
+  width: 80%;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -28,3 +28,28 @@ tr:nth-child(even) {
   background-color: #454141;
 }
 
+div#buyAndSell {
+  display: flex;
+  justify-content: center;
+}
+
+#chartContainer {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+#priceTable {
+  position: absolute;
+  bottom: 0;
+  padding: 20px;
+}
+
+#symbol_day_selection {
+  margin: 20px;
+}
+
+#tradeInterface {
+  width: 500px;
+  margin: auto;
+}

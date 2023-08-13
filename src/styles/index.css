@@ -36,7 +36,7 @@ h1 {
   line-height: 1.1;
 }
 
-button, #nextQuote {
+button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -47,20 +47,21 @@ button, #nextQuote {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover, #nextQuote:hover {
+button:hover {
   border-color: #646cff;
 }
 button:focus,
-button:focus-visible, #nextQuote {
+button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
 #app {
+  margin-top: 20px;
   background-color: #242424;
   color: rgba(255, 255, 255, 0.87);
 }
 
-button, #buy {
+button#buy {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: .8em, 1.6em;
@@ -72,7 +73,7 @@ button, #buy {
   transition: border-color .25s;
 }
 
-button, #sell {
+button#sell {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: .8em, 1.6em;
@@ -83,8 +84,6 @@ button, #sell {
   cursor: pointer;
   transition: border-color .25s;
 }
-
-
 
 /*
 @media (prefers-color-scheme: light) {
