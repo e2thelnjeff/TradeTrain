@@ -37,6 +37,7 @@ div#buyAndSell {
   width: 100%;
   display: flex;
   align-items: flex-end;
+  background-color: #ac9393;
 }
 
 #priceTable {
