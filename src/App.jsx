@@ -5,7 +5,7 @@ import SellButton from './components/SellButton'
 import Input from './components/Input'
 import PriceTable from './components/PriceTable'
 import TradeInterface from './components/TradeInterface'
-import { Bar } from 'react-chartjs-2'
+import { Line } from 'react-chartjs-2'
 import Chart from 'chart.js/auto'
 import { Grid } from 'semantic-ui-react'
 
@@ -22,10 +22,7 @@ function App() {
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(0);
 
-  const handleTradeQuantityChange = (event) => {
-    //console.log('datatype is: ' + typeof event.target.value); 
-    setTradeQuantity(parseInt(event.target.value));
-  }
+
 
   if (symbol_days.length == 0) {
     getSymbol_Days();
@@ -36,6 +33,28 @@ function App() {
     //symbol_days.file_names.forEach((element)=>console.log(element));
     setSymbolDays(response.file_names);
   }
+
+  function handleSymbolDaySelection() {
+    setSelectedSymbolDay(symbol_day_selection.value)
+    setTimeout(() => {
+      getChartData(symbol_day_selection.value)
+    }, 1000);
+    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 2000)
+  }
+
+  async function getQuote() {
+
+    setCount((count) => count + 1);
+
+    const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res) => res.json());
+
+    console.log("drum roll");
+
+    setData(results);
+  };
+
+
+
 
   async function buyTrade(quantity) {
     if (position < 0) {
@@ -78,24 +97,20 @@ function App() {
     }
   };
 
-  async function getQuote() {
-
-    setCount((count) => count + 1);
-
-    const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res) => res.json());
-
-    console.log("drum roll");
-
-    setData(results);
-  };
-
   async function getChartData(symbol_day) {
     const results = await fetch(`${API_URL}/get_x_bars?end=${count}&symbol_day=${symbol_day}`).then((res) => res.json());
     console.log(`Getting new chart data...`);
     let closeData = results.map((item) => item['close'])
-    let min = Math.min(...closeData) - 0.5 // setting the minimum chart value to a little less than our lowest value
+    //let min = Math.min(...closeData) - 0.5 // setting the minimum chart value to a little less than our lowest value
+    // let max = 1.5*(closeData.avg-closeData.min   )Math.min(...closeData)
+    let max = closeData+1.5*(Math.max(...closeData)-closeData)
+    let min = closeData-1.5*(closeData-Math.min(...closeData))
+    // maybe worth allowing these settings to vary/be varied for the user.  To test for bias, of sorts.  or to TRAIN.
+    // would allow ppl to swith up custom "views"
+    // 'glances'
+
     let chartOptions = {
-      responseive: true,
+      responsive: true,
       plugins: {
         legend: {
           position: 'top'
@@ -107,7 +122,8 @@ function App() {
       },
       scales: {
         yAxis: {
-          min: min
+          min: min,
+          max: max
         }
       }
     }
@@ -119,23 +135,17 @@ function App() {
       datasets: [{
         label: results[0]['symbol'],
         data: closeData,
-        borderColor: "black",
-        backgroundColor: "red"
+        borderColor: "pink",
+        backgroundColor: "blue"
       }]
     }
     );
   }
 
-  function handleSymbolDaySelection() {
-    setSelectedSymbolDay(symbol_day_selection.value)
-    setTimeout(() => {
-      getChartData(symbol_day_selection.value)
-    }, 1000);
-    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 2000)
-
-
+  const handleTradeQuantityChange = (event) => {
+    //console.log('datatype is: ' + typeof event.target.value); 
+    setTradeQuantity(parseInt(event.target.value));
   }
-
 
   return (
     <>
@@ -143,7 +153,7 @@ function App() {
         <Grid.Column>
           <h1>{data.symbol}</h1>
           <div id='chartContainer'>
-            <Bar options={chartOptions} data={chartData} id='bar' />
+            <Line options={chartOptions} data={chartData} id='line' />
           </div>
         </Grid.Column>
 
@@ -164,18 +174,14 @@ function App() {
 
       <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
 
-      <table>
-        <tbody>
-          <tr>
+      <div>
             <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
             <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
-          </tr>
-        </tbody>
-      </table>
+      </div>
 
       <input type='number' id='tradeQuantity' onChange={handleTradeQuantityChange} />
       <br />
-      {costBasis}
+      (for testing): {costBasis}
     </>
   )
 };
