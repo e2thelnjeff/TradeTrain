@@ -18,7 +18,7 @@ function App() {
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
   const [chartData, setChartData] = useState({ datasets: [] });
-  const [chartOptions, setChartOptions] = useState();
+  const [chartOptions, setChartOptions] = useState({ responseive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: "", } }, scales: { yAxis: { min: 0 } } });
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(0);
 
@@ -97,6 +97,20 @@ function App() {
     }
   };
 
+  async function getQuote(increment=false, symbolday=selected_symbol_day) {
+    if (increment) {
+      setCount((count) => count + 1);
+    }
+    
+    const results = await fetch(`${API_URL}?count=${count}&symbol_day=${symbolday}`).then((res) => res.json());
+
+    console.log("drum roll");
+    console.log(results);
+
+    setData(results);
+    getChartData(symbolday);
+  };
+
   async function getChartData(symbol_day) {
     const results = await fetch(`${API_URL}/get_x_bars?end=${count}&symbol_day=${symbol_day}`).then((res) => res.json());
     console.log(`Getting new chart data...`);
@@ -129,24 +143,36 @@ function App() {
     }
 
     setChartOptions(chartOptions);
-
     setChartData({
-      labels: results.map((item) => [item['date']]),
+      labels: results.map((item) => [
+        // convert full utc to HH:MM format in NYSE time
+        `${new Date(item['date']).getUTCHours() - 4}:${new Date(item['date']).getUTCMinutes()}`
+      ]),
+      
       datasets: [{
-        label: results[0]['symbol'],
+        label: symbol_day.slice(symbol_day.indexOf('_') + 1), // slicing symbol out of symbol day
         data: closeData,
-        borderColor: "pink",
-        backgroundColor: "blue"
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)'
       }]
     }
     );
+  }
+
+  function handleSymbolDaySelection() {
+    setSelectedSymbolDay(symbol_day_selection.value);
+    setTimeout(()=>getQuote(false, symbol_day_selection.value), 1000);
+    setTimeout(() => {
+      getChartData(symbol_day_selection.value);
+    }, 2000);
+    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 3000);
   }
 
   const handleTradeQuantityChange = (event) => {
     //console.log('datatype is: ' + typeof event.target.value); 
     setTradeQuantity(parseInt(event.target.value));
   }
-
+  
   return (
     <>
       <Grid columns={2}>
@@ -161,27 +187,29 @@ function App() {
           <PriceTable data={data} />
         </Grid.Column>
       </Grid>
+      <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
+        {symbol_days.map((symbol_day, i) => {
+          return <option className='item' key={i} >{symbol_day}</option>
+        })}
+      </select>
       <p>
-        <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
-          {symbol_days.map((symbol_day, i) => {
-            return <option className='item' key={i} >{symbol_day}</option>
-          })}
-        </select>
-      </p>
-      <p>
-        <button id="nextQuote" onClick={() => getQuote()}>Get Next Price</button>
+        <button id="nextQuote" onClick={() => getQuote(true)}>Get Next Price</button>
       </p>
 
       <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
 
-      <div>
+      <table>
+        <tbody>
+          <tr>
             <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
             <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
-      </div>
+          </tr>
+        </tbody>
+      </table>
 
       <input type='number' id='tradeQuantity' onChange={handleTradeQuantityChange} />
       <br />
-      (for testing): {costBasis}
+      {costBasis}
     </>
   )
 };
