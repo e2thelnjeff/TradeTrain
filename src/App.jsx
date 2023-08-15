@@ -197,14 +197,16 @@ function App() {
       </p>
 
       <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
-      
+
       <div id='buyAndSell'>
         <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
         <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
       </div>
 
       <input type='number' id='tradeQuantity' onChange={handleTradeQuantityChange} />
-      {costBasis}
+      <p>
+        {costBasis}
+      </p>
     </>
   )
 };
