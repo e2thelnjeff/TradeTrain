@@ -197,18 +197,13 @@ function App() {
       </p>
 
       <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
-
-      <table>
-        <tbody>
-          <tr>
-            <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
-            <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
-          </tr>
-        </tbody>
-      </table>
+      
+      <div id='buyAndSell'>
+        <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
+        <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
+      </div>
 
       <input type='number' id='tradeQuantity' onChange={handleTradeQuantityChange} />
-      <br />
       {costBasis}
     </>
   )
