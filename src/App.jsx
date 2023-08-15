@@ -20,7 +20,7 @@ function App() {
   const [chartData, setChartData] = useState({ datasets: [] });
   const [chartOptions, setChartOptions] = useState({ responseive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: "", } }, scales: { yAxis: { min: 0 } } });
   const [bookPnl, setBookPnl] = useState(0);
-  const [tradeQuantity, setTradeQuantity] = useState(0);
+  const [tradeQuantity, setTradeQuantity] = useState(1000);
 
 
 
@@ -203,7 +203,7 @@ function App() {
         <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
       </div>
 
-      <input type='number' id='tradeQuantity' onChange={handleTradeQuantityChange} />
+      <input type='number' id='tradeQuantity' defaultValue="1000" onChange={handleTradeQuantityChange} />
       <p>
         {costBasis}
       </p>
