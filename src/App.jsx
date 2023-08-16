@@ -135,10 +135,8 @@ function App() {
     const results = await fetch(`${API_URL}/get_x_bars?end=${count}&symbol_day=${symbol_day}`).then((res) => res.json());
     console.log(`Getting new chart data...`);
     let closeData = results.map((item) => item['close'])
-    //let min = Math.min(...closeData) - 0.5 // setting the minimum chart value to a little less than our lowest value
-    // let max = 1.5*(closeData.avg-closeData.min   )Math.min(...closeData)
-    let max = closeData+1.5*(Math.max(...closeData)-closeData)
-    let min = closeData-1.5*(closeData-Math.min(...closeData))
+    let min = Math.min(...closeData) - 0.05 // setting the minimum chart value to a little less than our lowest value
+    let max = Math.max(...closeData) + 0.05 // setting the minimum chart value to a little less than our lowest value
     // maybe worth allowing these settings to vary/be varied for the user.  To test for bias, of sorts.  or to TRAIN.
     // would allow ppl to swith up custom "views"
     // 'glances'
