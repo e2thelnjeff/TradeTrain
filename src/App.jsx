@@ -11,10 +11,10 @@ import { Grid } from 'semantic-ui-react'
 import TradeLog from './components/TradeLog'
 
 function App() {
-  const [count, setCount] = useState(2);
+  const [count, setCount] = useState(1);
   const [data, setData] = useState([]);
   const [symbol_days, setSymbolDays] = useState([]);
-  const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
+  const [selected_symbol_day, setSelectedSymbolDay] = useState("2023-07-25_GOOGL");
   const API_URL = 'http://localhost:3000/api';
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
@@ -27,6 +27,15 @@ function App() {
   //const [symbol, setSymbol] = useState('GOOGL');
   //const [tradeTime, setTradeTime] = useState('');
   const [trades, setTrades] = useState([]);
+  useEffect(() => {
+    getSymbol_Days();
+    getQuote(false);
+  }, []);
+
+
+
+
+
 
   async function recordTrade(tradeSide){
     const trade={
@@ -40,10 +49,6 @@ function App() {
     const copyOfTrades=[...trades];
     copyOfTrades.push(trade);
     setTrades(copyOfTrades);
-  }
-
-  if (symbol_days.length == 0) {
-    getSymbol_Days();
   }
 
   async function getSymbol_Days() {
@@ -196,7 +201,7 @@ function App() {
       <Grid columns={2}>
         <Grid.Column>
           <Grid.Row>
-            <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
+            <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' value={'2023-07-25_GOOGL'} onChange={handleSymbolDaySelection}>
           {symbol_days.map((symbol_day, i) => {
           return <option className='item' key={i} >{symbol_day}</option>
         })}
