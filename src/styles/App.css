@@ -103,6 +103,14 @@ button#sell:hover {
   overflow-y: scroll;
 }
 
+::-webkit-scrollbar {
+  background-color: #867676;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
+}
+
 #tradeLog > thead > tr:nth-child(2) {
   position: sticky;
   top: 0;
