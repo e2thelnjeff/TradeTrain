@@ -12,24 +12,16 @@ function PriceTable(data){
             <td>{data.date}</td>
           </tr>
           <tr>
-            <td>Open: </td>
-            <td>{data.open}</td>
-          </tr>
-          <tr>
             <td>High: </td>
             <td>{data.high}</td>
           </tr>
           <tr>
+            <td>Open: </td>
+            <td>{data.open}</td>
+          </tr>
+          <tr>
             <td>Low: </td>
             <td>{data.low}</td>
-          </tr>
-          <tr>
-            <td>Close (Last Price): </td>
-            <td>{data.close}</td>
-          </tr>
-          <tr>
-            <td>Volume: </td>
-            <td>{data.volume}</td>
           </tr>
         </tbody>
       </table>
