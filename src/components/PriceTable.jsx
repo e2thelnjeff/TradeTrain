@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment-timezone";
 
 function PriceTable(data){
     data = data.data;
@@ -9,7 +10,7 @@ function PriceTable(data){
         <tbody>
           <tr>
             <td>Date: </td>
-            <td>{data.date}</td>
+            <td>{moment(data.date).tz('America/New_York').format('h:mm')}</td>
           </tr>
           <tr>
             <td>High: </td>

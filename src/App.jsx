@@ -9,12 +9,13 @@ import { Line } from 'react-chartjs-2'
 import Chart from 'chart.js/auto'
 import { Grid } from 'semantic-ui-react'
 import TradeLog from './components/TradeLog'
+import moment from 'moment-timezone'
 
 function App() {
   const [count, setCount] = useState(1);
   const [data, setData] = useState([]);
   const [symbol_days, setSymbolDays] = useState([]);
-  const [selected_symbol_day, setSelectedSymbolDay] = useState("2023-07-25_GOOGL");
+  const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
   const API_URL = 'http://localhost:3000/api';
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
@@ -27,6 +28,8 @@ function App() {
   //const [symbol, setSymbol] = useState('GOOGL');
   //const [tradeTime, setTradeTime] = useState('');
   const [trades, setTrades] = useState([]);
+
+  //on page load
   useEffect(() => {
     getSymbol_Days();
     getQuote(false);
@@ -169,7 +172,7 @@ function App() {
     setChartData({
       labels: results.map((item) => [
         // convert full utc to HH:MM format in NYSE time
-        `${new Date(item['date']).getUTCHours() - 4}:${new Date(item['date']).getUTCMinutes()}`
+        moment(data.date).tz('America/New_York').format('h:mm')
       ]),
       
       datasets: [{
@@ -201,9 +204,9 @@ function App() {
       <Grid columns={2}>
         <Grid.Column>
           <Grid.Row>
-            <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' value={'2023-07-25_GOOGL'} onChange={handleSymbolDaySelection}>
+            <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
           {symbol_days.map((symbol_day, i) => {
-          return <option className='item' key={i} >{symbol_day}</option>
+          return <option className='item' key={i} value={symbol_day}>{symbol_day}</option>
         })}
           </select>
           </Grid.Row>
