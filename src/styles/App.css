@@ -38,6 +38,14 @@ tr:nth-child(even) {
 }
 
 #priceTable {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  border-radius: 3px;
+  padding: 20px;
+}
+
+#priceTable2 {
   position: absolute;
   bottom: 0;
   right: 0;

@@ -8,6 +8,7 @@ import TradeInterface from './components/TradeInterface'
 import { Line } from 'react-chartjs-2'
 import Chart from 'chart.js/auto'
 import { Grid } from 'semantic-ui-react'
+import TradeLog from './components/TradeLog'
 
 function App() {
   const [count, setCount] = useState(0);
@@ -21,8 +22,25 @@ function App() {
   const [chartOptions, setChartOptions] = useState({ responseive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: "", } }, scales: { yAxis: { min: 0 } } });
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(1000);
+  
+  //const [tradeSide, setTradeSide] = useState('');
+  //const [symbol, setSymbol] = useState('GOOGL');
+  //const [tradeTime, setTradeTime] = useState('');
+  const [trades, setTrades] = useState([]);
 
+  async function recordTrade(tradeSide){
+    const trade={
+      //symbol: symbol,
+      //timeStamp: tradeTime,
+      side: tradeSide,
+      quantity: tradeQuantity,
+      price: data.close
+    }
 
+    const copyOfTrades=[...trades];
+    copyOfTrades.push(trade);
+    setTrades(copyOfTrades);
+  }
 
   if (symbol_days.length == 0) {
     getSymbol_Days();
@@ -75,6 +93,7 @@ function App() {
       setPosition((position) => position + quantity);
       position == 0 ? setCostBasis(() => data.close) : setCostBasis((costBasis) => ((costBasis * position) + (quantity * data.close)) / (quantity + position));
     }
+    recordTrade('BUY');
   };
 
   async function sellTrade(quantity) {
@@ -95,6 +114,7 @@ function App() {
       setPosition((position) => position - quantity);
       position == 0 ? setCostBasis(() => data.close) : setCostBasis((costBasis) => ((costBasis * Math.abs(position)) + (quantity * data.close)) / (quantity + Math.abs(position)));
     }
+    recordTrade('SELL');
   };
 
   async function getQuote(increment=false, symbolday=selected_symbol_day) {
@@ -177,36 +197,58 @@ function App() {
     <>
       <Grid columns={2}>
         <Grid.Column>
-          <h1>{data.symbol}</h1>
-          <div id='chartContainer'>
-            <Line options={chartOptions} data={chartData} id='line' />
-          </div>
+        <Grid.Row>
+            <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
+          {symbol_days.map((symbol_day, i) => {
+          return <option className='item' key={i} >{symbol_day}</option>
+        })}
+          </select>
+          </Grid.Row>
+          
+          
+          
+
+          <Grid.Row>
+            <h1>{data.symbol}</h1>
+              <div id='chartContainer'>
+                <Line options={chartOptions} data={chartData} id='line' />
+              </div>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column>
+              <div id="tradeInterface">
+                <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
+              </div>
+            </Grid.Column>
+            <Grid.Column>
+              <div id="priceTable">
+                <PriceTable data={data} />
+              </div>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <div id='buyAndSell'>
+              <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
+              <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
+            </div>
+            <input type='number' id='tradeQuantity' defaultValue="1000" onChange={handleTradeQuantityChange} />
+          </Grid.Row>
+
+          <Grid.Row>
+            <button id="nextQuote" onClick={() => getQuote(true)}>Get Next Price</button>
+          </Grid.Row>
+          
         </Grid.Column>
 
         <Grid.Column>
-          <PriceTable data={data} />
+          <div id="tradeLog">
+            <TradeLog trades={trades} />
+          </div>
         </Grid.Column>
       </Grid>
-      <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
-        {symbol_days.map((symbol_day, i) => {
-          return <option className='item' key={i} >{symbol_day}</option>
-        })}
-      </select>
-      <p>
-        <button id="nextQuote" onClick={() => getQuote(true)}>Get Next Price</button>
-      </p>
-
-      <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
-
-      <div id='buyAndSell'>
-        <button id="buy" onClick={() => buyTrade(tradeQuantity)}>BUY</button>
-        <button id="sell" onClick={() => sellTrade(tradeQuantity)}>SELL</button>
-      </div>
-
-      <input type='number' id='tradeQuantity' defaultValue="1000" onChange={handleTradeQuantityChange} />
-      <p>
-        {costBasis}
-      </p>
+      
     </>
   )
 };
