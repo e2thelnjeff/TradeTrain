@@ -11,7 +11,7 @@ import { Grid } from 'semantic-ui-react'
 import TradeLog from './components/TradeLog'
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(2);
   const [data, setData] = useState([]);
   const [symbol_days, setSymbolDays] = useState([]);
   const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
@@ -197,7 +197,7 @@ function App() {
     <>
       <Grid columns={2}>
         <Grid.Column>
-        <Grid.Row>
+          <Grid.Row>
             <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
           {symbol_days.map((symbol_day, i) => {
           return <option className='item' key={i} >{symbol_day}</option>
@@ -216,16 +216,18 @@ function App() {
           </Grid.Row>
 
           <Grid.Row>
-            <Grid.Column>
-              <div id="tradeInterface">
-                <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
-              </div>
-            </Grid.Column>
-            <Grid.Column>
-              <div id="priceTable">
-                <PriceTable data={data} />
-              </div>
-            </Grid.Column>
+            <Grid columns={2}>
+              <Grid.Column floated='left'>
+                <div id="tradeInterface">
+                  <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
+                </div>
+              </Grid.Column>
+              <Grid.Column floated='right'>
+                <div>
+                  <PriceTable data={data} />
+                </div>
+              </Grid.Column>
+            </Grid>
           </Grid.Row>
 
           <Grid.Row>
@@ -243,7 +245,7 @@ function App() {
         </Grid.Column>
 
         <Grid.Column>
-          <div id="tradeLog">
+          <div>
             <TradeLog trades={trades} />
           </div>
         </Grid.Column>

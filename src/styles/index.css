@@ -56,7 +56,6 @@ button:focus-visible {
 }
 
 #app {
-  margin-top: 10px;
   background-color: #242424;
   color: rgba(255, 255, 255, 0.87);
 }
