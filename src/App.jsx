@@ -10,7 +10,7 @@ import Chart from 'chart.js/auto';
 import { Grid } from 'semantic-ui-react';
 import TradeLog from './components/TradeLog';
 import moment from 'moment-timezone';
-import { initializeApp } from 'firebase/app';
+import { GoogleAuthProvider } from "firebase/auth";
 
 function App() {
   const [count, setCount] = useState(1);
@@ -36,7 +36,7 @@ function App() {
     getQuote(false);
   }, []);
 
-
+  const provider = new GoogleAuthProvider();
 
 
 
@@ -173,7 +173,7 @@ function App() {
     setChartData({
       labels: results.map((item) => [
         // convert full utc to HH:MM format in NYSE time
-        moment(data.date).tz('America/New_York').format('h:mm')
+        moment(item['date']).tz('America/New_York').format('h:mm')
       ]),
       
       datasets: [{

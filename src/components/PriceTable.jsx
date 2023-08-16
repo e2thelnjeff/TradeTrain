@@ -9,7 +9,7 @@ function PriceTable(data){
       <table id="priceTable">
         <tbody>
           <tr>
-            <td>Date: </td>
+            <td>Time: </td>
             <td>{moment(data.date).tz('America/New_York').format('h:mm')}</td>
           </tr>
           <tr>
