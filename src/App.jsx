@@ -1,15 +1,16 @@
-import { useEffect, useState } from 'react'
-import './styles/App.css'
-import BuyButton from './components/BuyButton'
-import SellButton from './components/SellButton'
-import Input from './components/Input'
-import PriceTable from './components/PriceTable'
-import TradeInterface from './components/TradeInterface'
-import { Line } from 'react-chartjs-2'
-import Chart from 'chart.js/auto'
-import { Grid } from 'semantic-ui-react'
-import TradeLog from './components/TradeLog'
-import moment from 'moment-timezone'
+import { useEffect, useState } from 'react';
+import './styles/App.css';
+import BuyButton from './components/BuyButton';
+import SellButton from './components/SellButton';
+import Input from './components/Input';
+import PriceTable from './components/PriceTable';
+import TradeInterface from './components/TradeInterface';
+import { Line } from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
+import { Grid } from 'semantic-ui-react';
+import TradeLog from './components/TradeLog';
+import moment from 'moment-timezone';
+import { initializeApp } from 'firebase/app';
 
 function App() {
   const [count, setCount] = useState(1);
