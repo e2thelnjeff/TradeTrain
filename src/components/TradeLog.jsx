@@ -1,8 +1,8 @@
 import React from 'react'
 
-function tradeLogEntry(item){
+function tradeLogEntry(item, index){
     return (
-        <tr>
+        <tr key={index}>
             <td>{item.side}</td>
             <td>{item.quantity}</td>
             <td>{item.price}</td>
