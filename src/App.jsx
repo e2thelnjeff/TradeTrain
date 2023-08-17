@@ -10,7 +10,10 @@ import Chart from 'chart.js/auto';
 import { Grid } from 'semantic-ui-react';
 import TradeLog from './components/TradeLog';
 import moment from 'moment-timezone';
-import { GoogleAuthProvider } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithRedirect, getRedirectResult, signInWithPopup } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import firebaseConfig from "./configuration/firebase.json"
 
 function App() {
   const [count, setCount] = useState(1);
@@ -24,20 +27,38 @@ function App() {
   const [chartOptions, setChartOptions] = useState({ responseive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: "", } }, scales: { yAxis: { min: 0 } } });
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(1000);
+  const [userName, setUserName] = useState("");
+  
   
   //const [tradeSide, setTradeSide] = useState('');
   //const [symbol, setSymbol] = useState('GOOGL');
   //const [tradeTime, setTradeTime] = useState('');
   const [trades, setTrades] = useState([]);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
 
   //on page load
   useEffect(() => {
     getSymbol_Days();
     getQuote(false);
+    signInWithPopup(auth, provider)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      // The signed-in user info.
+      const user = result.user;
+      // IdP data available using getAdditionalUserInfo(result)
+      // ...
+      setUserName(user.displayName);
+    })  
+    // Initialize Firebase
   }, []);
 
-  const provider = new GoogleAuthProvider();
+  
 
+  
 
 
 
@@ -144,8 +165,6 @@ function App() {
     const results = await fetch(`${API_URL}/get_x_bars?end=${count}&symbol_day=${symbol_day}`).then((res) => res.json());
     console.log(`Getting new chart data...`);
     let closeData = results.map((item) => item['close'])
-    let min = Math.min(...closeData) - 0.05 // setting the minimum chart value to a little less than our lowest value
-    let max = Math.max(...closeData) + 0.05 // setting the minimum chart value to a little less than our lowest value
     // maybe worth allowing these settings to vary/be varied for the user.  To test for bias, of sorts.  or to TRAIN.
     // would allow ppl to swith up custom "views"
     // 'glances'
@@ -163,8 +182,7 @@ function App() {
       },
       scales: {
         yAxis: {
-          min: min,
-          max: max
+          beginAtZero: false
         }
       }
     }
@@ -200,7 +218,7 @@ function App() {
     setTradeQuantity(parseInt(event.target.value));
   }
   
-  return (
+  return userName ? (
     <>
       <Grid columns={2}>
         <Grid.Column>
@@ -252,14 +270,18 @@ function App() {
         </Grid.Column>
 
         <Grid.Column>
-          <div>
-            <TradeLog trades={trades} />
-          </div>
+          <Grid columns={2}>
+            <Grid.Column>
+              <TradeLog trades={trades} />
+            </Grid.Column>
+            <Grid.Column>
+              {`Welcome, ${userName}`}
+            </Grid.Column>
+          </Grid>
         </Grid.Column>
       </Grid>
-      
     </>
-  )
+  ) : <h1>"Please enable popups to sign in..."</h1>
 };
 
 export default App
