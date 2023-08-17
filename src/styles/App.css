@@ -45,13 +45,6 @@ tr:nth-child(even) {
   margin-bottom: 10px;
 }
 
-#priceTable2 {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  padding: 20px;
-}
-
 #symbol_day_selection {
   margin: 20px;
 }
