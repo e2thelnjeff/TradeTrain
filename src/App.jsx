@@ -10,9 +10,10 @@ import Chart from 'chart.js/auto';
 import { Grid } from 'semantic-ui-react';
 import TradeLog from './components/TradeLog';
 import moment from 'moment-timezone';
-import { GoogleAuthProvider, getAuth, signInWithRedirect, getRedirectResult, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithRedirect, getRedirectResult, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import Login from './components/Login';
 
 function App() {
   const [count, setCount] = useState(1);
@@ -50,25 +51,26 @@ function App() {
   useEffect(() => {
     getSymbol_Days();
     getQuote(false);
-    signInWithPopup(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
-      setUserName(user.displayName);
-    })  
+    
     // Initialize Firebase
   }, []);
 
   
 
   
-
-
+  function signIn(){
+    signInWithPopup(getAuth(), provider)
+    .then((result) => {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+    setUserName(user.displayName);
+    })
+  }
 
   async function recordTrade(tradeSide){
     const trade={
@@ -289,7 +291,12 @@ function App() {
         </Grid.Column>
       </Grid>
     </>
-  ) : <h1>Please enable popups to sign in...</h1>
+  ) : (
+    //if user is not logged in:
+    <Login>
+      <button onClick={signIn}>Sign in with Google</button>
+    </Login>
+  )
 };
 
 export default App
