@@ -14,12 +14,6 @@ function tradeLogEntry(item, index){
 function TradeLog({trades}){
         
     return(
-        //symbol
-        //timeStamp, shortened
-        //quantity
-        //buy/sell
-        //price
-
         //buyToClose etc tag (this can be made here) - a note
         //p&l on that trade, if closing.  In, like, SCREEN-SIZED FONT FADE-EFFECT
         //kinda like Flash
@@ -43,9 +37,5 @@ function TradeLog({trades}){
         </table>
     )
 }
-
-//this takes what happened and starts interpreting and displaying what it is and means
-// and can be queried by the server/DB?  And can talk to the server/DB.
-// turn it into a job-doer for the caller, and a memory and interpreter for what's beyond, an AUTHORITY
 
 export default TradeLog;
