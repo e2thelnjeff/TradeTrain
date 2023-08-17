@@ -281,7 +281,7 @@ function App() {
         </Grid.Column>
       </Grid>
     </>
-  ) : <h1>"Please enable popups to sign in..."</h1>
+  ) : <h1>Please enable popups to sign in...</h1>
 };
 
 export default App
