@@ -13,7 +13,6 @@ import moment from 'moment-timezone';
 import { GoogleAuthProvider, getAuth, signInWithRedirect, getRedirectResult, signInWithPopup } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import firebaseConfig from "./configuration/firebase.json"
 
 function App() {
   const [count, setCount] = useState(1);
@@ -34,7 +33,16 @@ function App() {
   //const [symbol, setSymbol] = useState('GOOGL');
   //const [tradeTime, setTradeTime] = useState('');
   const [trades, setTrades] = useState([]);
-  const app = initializeApp(firebaseConfig);
+  console.log(import.meta.env.VITE_API_KEY);
+  const app = initializeApp({
+    apiKey: import.meta.env.VITE_API_KEY,
+    authDomain: "tradetrain-11cc5.firebaseapp.com",
+    projectId: "tradetrain-11cc5",
+    storageBucket: "tradetrain-11cc5.appspot.com",
+    messagingSenderId: "303887724769",
+    appId: "1:303887724769:web:196471c135cf53921ec7a0",
+    measurementId: "G-TG8BCF6GN1"
+  });
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
 
@@ -267,7 +275,6 @@ function App() {
           <Grid.Row>
             <button id="nextQuote" onClick={() => getQuote(true)}>Get Next Price</button>
           </Grid.Row>
-          
         </Grid.Column>
 
         <Grid.Column>
