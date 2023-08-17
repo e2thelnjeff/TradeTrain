@@ -3,6 +3,7 @@ import React from 'react'
 function tradeLogEntry(item, index){
     return (
         <tr key={index}>
+            <td>{item.time}</td>
             <td>{item.side}</td>
             <td>{item.quantity}</td>
             <td>{item.price}</td>
@@ -29,6 +30,7 @@ function TradeLog({trades}){
             <thead>
                 <tr><th colSpan="2">Trade Log</th></tr>
                 <tr>
+                    <th>Time</th>
                     <th>Side</th>
                     <th>Qty</th>
                     <th>Price</th>

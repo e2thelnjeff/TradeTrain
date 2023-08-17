@@ -66,6 +66,7 @@ function App() {
     const trade={
       //symbol: symbol,
       //timeStamp: tradeTime,
+      time: moment(data.date).tz('America/New_York').format('h:mm'),
       side: tradeSide,
       quantity: tradeQuantity,
       price: data.close
