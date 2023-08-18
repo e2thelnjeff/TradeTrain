@@ -34,7 +34,6 @@ function App() {
   //const [symbol, setSymbol] = useState('GOOGL');
   //const [tradeTime, setTradeTime] = useState('');
   const [trades, setTrades] = useState([]);
-  console.log(import.meta.env.VITE_API_KEY);
   const app = initializeApp({
     apiKey: import.meta.env.VITE_API_KEY,
     authDomain: "tradetrain-11cc5.firebaseapp.com",
