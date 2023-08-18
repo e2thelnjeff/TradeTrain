@@ -19,7 +19,7 @@ function App() {
   const [count, setCount] = useState(1);
   const [data, setData] = useState([]);
   const [symbol_days, setSymbolDays] = useState([]);
-  const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
+  const [selected_symbol_day, setSelectedSymbolDay] = useState();
   const API_URL = 'http://localhost:3000/api';
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
@@ -28,6 +28,7 @@ function App() {
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(1000);
   const [userName, setUserName] = useState("");
+  
   
   
   //const [tradeSide, setTradeSide] = useState('');
@@ -49,7 +50,6 @@ function App() {
   //on page load
   useEffect(() => {
     getSymbol_Days();
-    getQuote(false);
     
     // Initialize Firebase
   }, []);
@@ -90,15 +90,6 @@ function App() {
     const response = await fetch(`${API_URL}/get_symbol_days`).then((res) => res.json());
     //symbol_days.file_names.forEach((element)=>console.log(element));
     setSymbolDays(response.file_names);
-  }
-
-  function handleSymbolDaySelection() {
-    setSelectedSymbolDay(symbol_day_selection.value);
-    setTimeout(() => {
-      getChartData(symbol_day_selection.value);
-      setTimeout(()=>getQuote(false, symbol_day_selection.value), 100);
-    }, 1000);
-    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 2000)
   }
 
   async function buyTrade(quantity) {
@@ -201,26 +192,24 @@ function App() {
     );
   }
 
+  function handleSymbolDaySelection(symbol_day_selection) {
+    setSelectedSymbolDay(symbol_day_selection);
+    setTimeout(() => {
+      getChartData(symbol_day_selection);
+      setTimeout(()=>getQuote(false, symbol_day_selection), 100);
+    }, 1000);
+    setTimeout(() => console.log(chartData, symbol_day_selection, chartOptions), 2000)
+  }
+
   const handleTradeQuantityChange = (event) => {
     //console.log('datatype is: ' + typeof event.target.value); 
     setTradeQuantity(parseInt(event.target.value));
   }
   
-  return userName ? (
+  return selected_symbol_day ? (
     <>
       <Grid columns={2}>
         <Grid.Column>
-          <Grid.Row>
-            <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
-          {symbol_days.map((symbol_day, i) => {
-          return <option className='item' key={i} value={symbol_day}>{symbol_day}</option>
-        })}
-          </select>
-          </Grid.Row>
-          
-          
-          
-
           <Grid.Row>
             <h1>{data.symbol}</h1>
               <div id='chartContainer'>
@@ -271,9 +260,25 @@ function App() {
       </Grid>
     </>
   ) : (
-    //if user is not logged in:
+    //if no symbol day is selected
     <Login>
-      <button onClick={signIn}>Sign in with Google</button>
+      {!userName ?
+          //user must login
+          <>
+            <h2>Please sign in below...</h2>
+            <button onClick={signIn}>Sign in with Google</button>
+          </>
+        :
+          //select the symbol day
+          <>
+            <h2>Pick a day and symbol</h2>
+            <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={(e)=>handleSymbolDaySelection(e.target.value)}>
+                {symbol_days.map((symbol_day, i) => {
+                return <option className='item' key={i} value={symbol_day}>{symbol_day}</option>
+                })}
+            </select>
+          </>
+      }
     </Login>
   )
 };

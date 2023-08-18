@@ -7,9 +7,6 @@ function Login(props) {
         <h1>
             TradeTrain
         </h1>
-        <p>
-            Please login below...
-        </p>
         {props.children}
     </>
     )
