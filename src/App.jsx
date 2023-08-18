@@ -28,7 +28,7 @@ function App() {
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(1000);
   const [userName, setUserName] = useState("");
-  const TICK_INTERVAL = 5000;
+  const TICK_INTERVAL = 1000;
   
   
   
