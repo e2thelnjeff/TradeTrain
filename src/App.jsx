@@ -20,7 +20,8 @@ function App() {
   const [data, setData] = useState([]);
   const [symbol_days, setSymbolDays] = useState([]);
   const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
-  const API_URL = 'http://localhost:3000/api';
+  //const API_URL = 'http://localhost:3000/api';
+  const API_URL = import.meta.env.VITE_API_URL;
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
   const [chartData, setChartData] = useState({ datasets: [] });
@@ -29,18 +30,17 @@ function App() {
   const [tradeQuantity, setTradeQuantity] = useState(1000);
   const [userName, setUserName] = useState("");
   
-  
-  //const [tradeSide, setTradeSide] = useState('');
   //const [symbol, setSymbol] = useState('GOOGL');
   //const [tradeTime, setTradeTime] = useState('');
   const [trades, setTrades] = useState([]);
-  console.log(import.meta.env.VITE_API_KEY);
+  //console.log(import.meta.env.VITE_API_KEY);
   const app = initializeApp({
+    //apiKey: "AIzaSyBldVPj-4ks84syXnCEsAc8nE6DDGspElE",
     apiKey: import.meta.env.VITE_API_KEY,
     authDomain: "tradetrain-11cc5.firebaseapp.com",
     projectId: "tradetrain-11cc5",
     storageBucket: "tradetrain-11cc5.appspot.com",
-    messagingSenderId: "303887724769",
+    messagingSenderId: "303887724769",                                
     appId: "1:303887724769:web:196471c135cf53921ec7a0",
     measurementId: "G-TG8BCF6GN1"
   });
@@ -64,6 +64,7 @@ function App() {
     // This gives you a Google Access Token. You can use it to access the Google API.
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const token = credential.accessToken;
+    console.log(token);                     
     // The signed-in user info.
     const user = result.user;
     // IdP data available using getAdditionalUserInfo(result)
