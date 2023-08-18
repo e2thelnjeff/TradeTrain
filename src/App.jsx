@@ -248,7 +248,7 @@ function App() {
           </Grid.Row>
 
           <Grid.Row>
-            <button id="nextQuote" onClick={() => getQuote(true)}>Get Next Price</button>
+            {/*<button id="nextQuote" onClick={() => getQuote(true)}>Get Next Price</button>*/}
           </Grid.Row>
         </Grid.Column>
 
