@@ -93,26 +93,13 @@ function App() {
   }
 
   function handleSymbolDaySelection() {
-    setSelectedSymbolDay(symbol_day_selection.value)
+    setSelectedSymbolDay(symbol_day_selection.value);
     setTimeout(() => {
-      getChartData(symbol_day_selection.value)
+      getChartData(symbol_day_selection.value);
+      setTimeout(()=>getQuote(false, symbol_day_selection.value), 100);
     }, 1000);
     setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 2000)
   }
-
-  async function getQuote() {
-
-    setCount((count) => count + 1);
-
-    const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res) => res.json());
-
-    console.log("drum roll");
-
-    setData(results);
-  };
-
-
-
 
   async function buyTrade(quantity) {
     if (position < 0) {
