@@ -14,6 +14,8 @@ import { GoogleAuthProvider, getAuth, signInWithRedirect, getRedirectResult, sig
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import Login from './components/Login';
+import { getFirestore, onSnapshot, collection, setDoc, doc } from "firebase/firestore";
+
 
 function App() {
   const [count, setCount] = useState(1);
@@ -29,10 +31,11 @@ function App() {
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(1000);
   const [userName, setUserName] = useState("");
+  const [trades, setTrades] = useState([]);
+
   
   //const [symbol, setSymbol] = useState('GOOGL');
   //const [tradeTime, setTradeTime] = useState('');
-  const [trades, setTrades] = useState([]);
   //console.log(import.meta.env.VITE_API_KEY);
   const app = initializeApp({
     //apiKey: "AIzaSyBldVPj-4ks84syXnCEsAc8nE6DDGspElE",
@@ -46,7 +49,7 @@ function App() {
   });
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
-
+  const db = getFirestore();
   //on page load
   useEffect(() => {
     getSymbol_Days();
@@ -55,16 +58,18 @@ function App() {
     // Initialize Firebase
   }, []);
 
-  
-
+  const docRef=doc(db,'colors','black');
+  const payload={name:'black',value:'#000'};
+  setDoc(docRef,payload);
   
   function signIn(){
     signInWithPopup(getAuth(), provider)
     .then((result) => {
     // This gives you a Google Access Token. You can use it to access the Google API.
     const credential = GoogleAuthProvider.credentialFromResult(result);
+    console.log("Credential is: " + credential.json);
     const token = credential.accessToken;
-    console.log(token);                     
+    console.log("Token is: " + token);                     
     // The signed-in user info.
     const user = result.user;
     // IdP data available using getAdditionalUserInfo(result)
