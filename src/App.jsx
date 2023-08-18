@@ -28,6 +28,7 @@ function App() {
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(1000);
   const [userName, setUserName] = useState("");
+  const TICK_INTERVAL = 5000;
   
   
   
@@ -50,11 +51,17 @@ function App() {
   //on page load
   useEffect(() => {
     getSymbol_Days();
-    
     // Initialize Firebase
   }, []);
 
-  
+  useEffect(()=>{
+    let id = setInterval(()=>{
+      if (selected_symbol_day) {
+        getQuote(true, selected_symbol_day);
+      }
+    },TICK_INTERVAL)
+    return () => clearInterval(id);
+  }, [count, selected_symbol_day])
 
   
   function signIn(){
@@ -139,14 +146,14 @@ function App() {
     if (increment) {
       setCount((count) => count + 1);
     }
-    
     const results = await fetch(`${API_URL}?count=${count}&symbol_day=${symbolday}`).then((res) => res.json());
 
     console.log("drum roll");
     console.log(results);
-
-    setData(results);
-    getChartData(symbolday);
+    setTimeout(()=>{
+      setData(results);
+      getChartData(symbolday);
+    }, 100)
   };
 
   async function getChartData(symbol_day) {
@@ -197,8 +204,8 @@ function App() {
     setTimeout(() => {
       getChartData(symbol_day_selection);
       setTimeout(()=>getQuote(false, symbol_day_selection), 100);
-    }, 1000);
-    setTimeout(() => console.log(chartData, symbol_day_selection, chartOptions), 2000)
+    }, 100);
+    setTimeout(() => console.log(chartData, symbol_day_selection, chartOptions), 300)
   }
 
   const handleTradeQuantityChange = (event) => {

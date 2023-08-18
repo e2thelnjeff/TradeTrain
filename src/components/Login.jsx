@@ -1,6 +1,3 @@
-import setUserName from "../App"
-import { signInWithPopup, getAuth } from "firebase/auth";
-
 function Login(props) {
     return(
     <>
