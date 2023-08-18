@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import './styles/App.css';
-import BuyButton from './components/BuyButton';
-import SellButton from './components/SellButton';
 import Input from './components/Input';
 import PriceTable from './components/PriceTable';
 import TradeInterface from './components/TradeInterface';
@@ -21,9 +19,8 @@ function App() {
   const [count, setCount] = useState(1);
   const [data, setData] = useState([]);
   const [symbol_days, setSymbolDays] = useState([]);
-  const [selected_symbol_day, setSelectedSymbolDay] = useState("2017-09-29_GOOGL");
-  //const API_URL = 'http://localhost:3000/api';
-  const API_URL = import.meta.env.VITE_API_URL;
+  const [selected_symbol_day, setSelectedSymbolDay] = useState();
+  const API_URL = 'http://localhost:3000/api';
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
   const [chartData, setChartData] = useState({ datasets: [] });
@@ -31,19 +28,15 @@ function App() {
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(1000);
   const [userName, setUserName] = useState("");
-  const [trades, setTrades] = useState([]);
-
+  const TICK_INTERVAL = 1000;
   
-  //const [symbol, setSymbol] = useState('GOOGL');
-  //const [tradeTime, setTradeTime] = useState('');
-  //console.log(import.meta.env.VITE_API_KEY);
+  const [trades, setTrades] = useState([]);
   const app = initializeApp({
-    //apiKey: "AIzaSyBldVPj-4ks84syXnCEsAc8nE6DDGspElE",
     apiKey: import.meta.env.VITE_API_KEY,
     authDomain: "tradetrain-11cc5.firebaseapp.com",
     projectId: "tradetrain-11cc5",
     storageBucket: "tradetrain-11cc5.appspot.com",
-    messagingSenderId: "303887724769",                                
+    messagingSenderId: "303887724769",
     appId: "1:303887724769:web:196471c135cf53921ec7a0",
     measurementId: "G-TG8BCF6GN1"
   });
@@ -53,14 +46,18 @@ function App() {
   //on page load
   useEffect(() => {
     getSymbol_Days();
-    getQuote(false);
-    
     // Initialize Firebase
   }, []);
 
-  const docRef=doc(db,'colors','black');
-  const payload={name:'black',value:'#000'};
-  setDoc(docRef,payload);
+  useEffect(()=>{
+    let id = setInterval(()=>{
+      if (selected_symbol_day) {
+        getQuote(true, selected_symbol_day);
+      }
+    },TICK_INTERVAL)
+    return () => clearInterval(id);
+  }, [count, selected_symbol_day])
+
   
   function signIn(){
     signInWithPopup(getAuth(), provider)
@@ -69,7 +66,6 @@ function App() {
     const credential = GoogleAuthProvider.credentialFromResult(result);
     console.log("Credential is: " + credential.json);
     const token = credential.accessToken;
-    console.log("Token is: " + token);                     
     // The signed-in user info.
     const user = result.user;
     // IdP data available using getAdditionalUserInfo(result)
@@ -98,28 +94,6 @@ function App() {
     //symbol_days.file_names.forEach((element)=>console.log(element));
     setSymbolDays(response.file_names);
   }
-
-  function handleSymbolDaySelection() {
-    setSelectedSymbolDay(symbol_day_selection.value)
-    setTimeout(() => {
-      getChartData(symbol_day_selection.value)
-    }, 1000);
-    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 2000)
-  }
-
-  async function getQuote() {
-
-    setCount((count) => count + 1);
-
-    const results = await fetch(`${API_URL}?count=${count}&symbol_day=${selected_symbol_day}`).then((res) => res.json());
-
-    console.log("drum roll");
-
-    setData(results);
-  };
-
-
-
 
   async function buyTrade(quantity) {
     if (position < 0) {
@@ -168,23 +142,21 @@ function App() {
     if (increment) {
       setCount((count) => count + 1);
     }
-    
     const results = await fetch(`${API_URL}?count=${count}&symbol_day=${symbolday}`).then((res) => res.json());
 
     console.log("drum roll");
     console.log(results);
-
-    setData(results);
-    getChartData(symbolday);
+    setTimeout(()=>{
+      setData(results);
+      getChartData(symbolday);
+    }, 100)
   };
 
   async function getChartData(symbol_day) {
     const results = await fetch(`${API_URL}/get_x_bars?end=${count}&symbol_day=${symbol_day}`).then((res) => res.json());
     console.log(`Getting new chart data...`);
     let closeData = results.map((item) => item['close'])
-    // maybe worth allowing these settings to vary/be varied for the user.  To test for bias, of sorts.  or to TRAIN.
-    // would allow ppl to swith up custom "views"
-    // 'glances'
+    // possible feature in varying these
 
     let chartOptions = {
       responsive: true,
@@ -221,13 +193,13 @@ function App() {
     );
   }
 
-  function handleSymbolDaySelection() {
-    setSelectedSymbolDay(symbol_day_selection.value);
-    setTimeout(()=>getQuote(false, symbol_day_selection.value), 1000);
+  function handleSymbolDaySelection(symbol_day_selection) {
+    setSelectedSymbolDay(symbol_day_selection);
     setTimeout(() => {
-      getChartData(symbol_day_selection.value);
-    }, 2000);
-    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 3000);
+      getChartData(symbol_day_selection);
+      setTimeout(()=>getQuote(false, symbol_day_selection), 100);
+    }, 100);
+    setTimeout(() => console.log(chartData, symbol_day_selection, chartOptions), 300)
   }
 
   const handleTradeQuantityChange = (event) => {
@@ -235,21 +207,10 @@ function App() {
     setTradeQuantity(parseInt(event.target.value));
   }
   
-  return userName ? (
+  return selected_symbol_day ? (
     <>
       <Grid columns={2}>
         <Grid.Column>
-          <Grid.Row>
-            <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={handleSymbolDaySelection}>
-          {symbol_days.map((symbol_day, i) => {
-          return <option className='item' key={i} value={symbol_day}>{symbol_day}</option>
-        })}
-          </select>
-          </Grid.Row>
-          
-          
-          
-
           <Grid.Row>
             <h1>{data.symbol}</h1>
               <div id='chartContainer'>
@@ -281,7 +242,7 @@ function App() {
           </Grid.Row>
 
           <Grid.Row>
-            <button id="nextQuote" onClick={() => getQuote(true)}>Get Next Price</button>
+            {/*<button id="nextQuote" onClick={() => getQuote(true)}>Get Next Price</button>*/}
           </Grid.Row>
         </Grid.Column>
 
@@ -291,16 +252,34 @@ function App() {
               <TradeLog trades={trades} />
             </Grid.Column>
             <Grid.Column>
-              {`Welcome, ${userName}`}
+              <h1>
+                {`Welcome, ${userName}`}
+              </h1>
             </Grid.Column>
           </Grid>
         </Grid.Column>
       </Grid>
     </>
   ) : (
-    //if user is not logged in:
+    //if no symbol day is selected
     <Login>
-      <button onClick={signIn}>Sign in with Google</button>
+      {!userName ?
+          //user must login
+          <>
+            <h2>Please sign in below...</h2>
+            <button onClick={signIn}>Sign in with Google</button>
+          </>
+        :
+          //select the symbol day
+          <>
+            <h2>Pick a day and symbol</h2>
+            <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={(e)=>handleSymbolDaySelection(e.target.value)}>
+                {symbol_days.map((symbol_day, i) => {
+                return <option className='item' key={i} value={symbol_day}>{symbol_day}</option>
+                })}
+            </select>
+          </>
+      }
     </Login>
   )
 };
