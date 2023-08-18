@@ -214,15 +214,6 @@ function App() {
     );
   }
 
-  function handleSymbolDaySelection() {
-    setSelectedSymbolDay(symbol_day_selection.value);
-    setTimeout(()=>getQuote(false, symbol_day_selection.value), 1000);
-    setTimeout(() => {
-      getChartData(symbol_day_selection.value);
-    }, 2000);
-    setTimeout(() => console.log(chartData, symbol_day_selection.value, chartOptions), 3000);
-  }
-
   const handleTradeQuantityChange = (event) => {
     //console.log('datatype is: ' + typeof event.target.value); 
     setTradeQuantity(parseInt(event.target.value));
@@ -284,7 +275,9 @@ function App() {
               <TradeLog trades={trades} />
             </Grid.Column>
             <Grid.Column>
-              {`Welcome, ${userName}`}
+              <h1>
+                {`Welcome, ${userName}`}
+              </h1>
             </Grid.Column>
           </Grid>
         </Grid.Column>
