@@ -8,10 +8,10 @@
     ],
     "rewrites": [
       {
-        "source": "**",
-        "destination": "/index.html",
         "source": "api",
-        "function": "app"
+        "function": "app",
+        "source": "**",
+        "destination": "/index.html"
       }
     ]
   },
