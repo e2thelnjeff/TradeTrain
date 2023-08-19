@@ -20,10 +20,8 @@ function App() {
   const [data, setData] = useState([]);
   const [symbol_days, setSymbolDays] = useState([]);
   const [selected_symbol_day, setSelectedSymbolDay] = useState();
-  if(import.meta.env.PROD){
-    const API_URL = 'https://app-d6f2drtuva-uc.a.run.app/api';
-  }
-  else{
+  const API_URL = 'https://app-d6f2drtuva-uc.a.run.app/api';
+  if(import.meta.env.DEV) {
     const API_URL = 'http://localhost:3000/api';
   }
   const [position, setPosition] = useState(0);
