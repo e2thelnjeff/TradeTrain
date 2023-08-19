@@ -9,12 +9,15 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "destination": "/index.html",
+        "source": "api",
+        "function": "app"
       }
     ]
   },
   "functions": [
     {
+      "runtime": "nodejs18",
       "source": "src/services",
       "codebase": "default",
       "ignore": [

@@ -2,6 +2,7 @@ const fs = require('fs');
 const cors = require('cors');
 const express = require('express');
 const path = require('path');
+const {onRequest} = require("firebase-functions/v2/https");
 
 let corsOptions = {
     origin: '*',
@@ -65,7 +66,7 @@ app.get("/api/get_symbol_days",function(req, res){
 */
 
 /*
-const {onRequest} = require("firebase-functions/v2/https");
+
 const logger = require("firebase-functions/logger");
 */
 
@@ -76,5 +77,5 @@ const logger = require("firebase-functions/logger");
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
-
 app.listen(3000, () => console.log('Listening at 3000'));
+exports.app = onRequest(app);
