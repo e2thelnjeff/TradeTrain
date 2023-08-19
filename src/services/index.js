@@ -77,5 +77,5 @@ const logger = require("firebase-functions/logger");
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
-app.listen(3000, () => console.log('Listening at 3000'));
 exports.app = onRequest(app);
+//app.listen(3000, () => console.log('Listening at 3000'));

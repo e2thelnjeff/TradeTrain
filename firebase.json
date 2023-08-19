@@ -20,7 +20,8 @@
   "functions": [
     {
       "runtime": "nodejs18",
-      "source": "src/services",
+      "engines": {"node": "18"},
+      "source": "/src/services",
       "codebase": "default",
       "ignore": [
         "node_modules",
