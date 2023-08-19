@@ -32,7 +32,7 @@ function App() {
   
   const [trades, setTrades] = useState([]);
   const app = initializeApp({
-    apiKey: import.meta.env.VITE_API_KEY,
+    apiKey: "AIzaSyBldVPj-4ks84syXnCEsAc8nE6DDGspElE",
     authDomain: "tradetrain-11cc5.firebaseapp.com",
     projectId: "tradetrain-11cc5",
     storageBucket: "tradetrain-11cc5.appspot.com",
