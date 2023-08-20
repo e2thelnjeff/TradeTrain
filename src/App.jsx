@@ -37,7 +37,7 @@ function App() {
   const app = initializeApp({
     apiKey: "AIzaSyBldVPj-4ks84syXnCEsAc8nE6DDGspElE",
     authDomain: "tradetrain-11cc5.firebaseapp.com",
-    projectId: "tradetrain-11cc5",
+    projectId: "tradetrain-11cc5",  
     storageBucket: "tradetrain-11cc5.appspot.com",
     messagingSenderId: "303887724769",
     appId: "1:303887724769:web:196471c135cf53921ec7a0",
@@ -119,7 +119,6 @@ function App() {
   async function recordTrade(tradeSide){
     const trade={
       //symbol: symbol,
-      //timeStamp: tradeTime,
       time: moment(data.date).tz('America/New_York').format('h:mm'),
       side: tradeSide,
       quantity: tradeQuantity,
@@ -173,9 +172,15 @@ function App() {
   async function sellTrade(quantity) {
     if (position > 0) {
       if (quantity >= position) {
-        setBookPnl((bookPnl) => bookPnl + (data.close - costBasis) * position);
-        setPosition((position) => position - quantity);
-        position - quantity == 0 ? setCostBasis(() => 0) : setCostBasis(() => data.close);
+        if (quantity == position){
+          setBookPnl((bookPnl) => bookPnl + (data.close - costBasis) * position)
+          setPosition((position) => position - quantity)
+          position - quantity == 0 ? setCostBasis(() => 0) : setCostBasis(() => data.close)
+        } else{
+          console.log("tut tut!  no selling short.");
+          return
+        }
+        
       } else {
         //long and selling to close
         setBookPnl((bookPnl) => bookPnl + (data.close - costBasis) * quantity);
@@ -185,6 +190,8 @@ function App() {
     } else {
       //implies their position is flat or short
       //no pnl to book
+      console.log("tut tut!  no selling short!")
+      return
       setPosition((position) => position - quantity);
       position == 0 ? setCostBasis(() => data.close) : setCostBasis((costBasis) => ((costBasis * Math.abs(position)) + (quantity * data.close)) / (quantity + Math.abs(position)));
     }

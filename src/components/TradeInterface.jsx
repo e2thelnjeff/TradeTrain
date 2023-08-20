@@ -37,6 +37,6 @@ function TradeInterface({data,position,costBasis,bookPnl,db,uid,netLiq}) {
             </tbody>
         </table>
     )
-}
+    }
 
 export default TradeInterface;                                                                  
