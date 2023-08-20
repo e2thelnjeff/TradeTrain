@@ -12,8 +12,9 @@ import { GoogleAuthProvider, getAuth, signInWithRedirect, getRedirectResult, sig
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import Login from './components/Login';
-import { getFirestore, onSnapshot, collection, setDoc, doc } from "firebase/firestore";
 
+import { getFirestore, onSnapshot, collection, setDoc, doc, getDoc, getDocs } from "firebase/firestore";
+import Account from './components/Account';
 
 function App() {
   const [count, setCount] = useState(1);
@@ -28,8 +29,7 @@ function App() {
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(1000);
   const [userName, setUserName] = useState("");
-  const TICK_INTERVAL = 1000;
-  
+  const TICK_INTERVAL = 3000;
   const [trades, setTrades] = useState([]);
   const app = initializeApp({
     apiKey: import.meta.env.VITE_API_KEY,
@@ -42,7 +42,10 @@ function App() {
   });
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
-  const db = getFirestore();
+
+  const [netLiq,setNetLiq] = useState(0);
+  const [buyingPower, setBuyingPower] = useState(0);
+  
   //on page load
   useEffect(() => {
     getSymbol_Days();
@@ -58,21 +61,62 @@ function App() {
     return () => clearInterval(id);
   }, [count, selected_symbol_day])
 
+
+  const db = getFirestore(app);
+
+
+  async function getUserStats(uid){
+    const userDoc = doc(db,"trainees",uid);
+    //console.log("userDoc is: ",userDoc);
+    //console.log("netLiq is: ",userDoc.netLiq)
+    const docSnap = (await getDoc(userDoc));
+
+    if (docSnap.exists()){
+      const traineeData=docSnap.data()
+      setNetLiq(traineeData.netLiq)
+      setBuyingPower(traineeData.netLiq+buyingPower)
+      console.log("netLiq is: ", traineeData.netLiq)
+      } else{
+        //create a trainee and give him a netLiq
+        await setDoc(doc(db,"trainees",uid),{
+          name: "unknown",
+          netLiq: 500000
+        });
+        setNetLiq(500000);
+        setBuyingPower(500000);
+        //setTimeout(()=>console.log("netLiq for new user is: ",netLiq),3000);
+        // no amount of waiting seems to be able to let one set and IMMEDIATELY 
+        // RETRIEVE netLiq here.  It'll show up as 0 if one queries it rn.
+        // but it's available and correct if one queries it elsewhere/later 
+        //console.log("netLiq is: ", netLiq)
+      }
+  }
+
+
+
+
+
   
   function signIn(){
     signInWithPopup(getAuth(), provider)
     .then((result) => {
     // This gives you a Google Access Token. You can use it to access the Google API.
     const credential = GoogleAuthProvider.credentialFromResult(result);
-    console.log("Credential is: " + credential.json);
     const token = credential.accessToken;
     // The signed-in user info.
     const user = result.user;
     // IdP data available using getAdditionalUserInfo(result)
     // ...
     setUserName(user.displayName);
+    console.log("uid is: ", user.uid)
+    //console.log("User Object: ",user)
+    getUserStats('69696977');
+    //async const 
+
     })
   }
+
+  
 
   async function recordTrade(tradeSide){
     const trade={
@@ -86,7 +130,10 @@ function App() {
 
     const copyOfTrades=[...trades];
     copyOfTrades.push(trade);
-    setTrades(copyOfTrades);
+    setTrades(copyOfTrades)
+    //console.log('buying power is now: ', buyingPower)
+    //the above console.log is always a step behind
+
   }
 
   async function getSymbol_Days() {
@@ -96,25 +143,33 @@ function App() {
   }
 
   async function buyTrade(quantity) {
-    if (position < 0) {
-      if (quantity >= Math.abs(position)) {
-        //this means they're short and buying to get flat or flip (i.e. open) long
-        setBookPnl((bookPnl) => bookPnl + (costBasis - data.close) * Math.abs(position));
-        setPosition((position) => position + quantity);
-        position + quantity == 0 ? setCostBasis(() => 0) : setCostBasis(() => data.close);
+    if ((quantity*data.close) > buyingPower){
+      console.log('insufficient funds');
+      return
+    } else{
+      if (position < 0) {
+        if (quantity >= Math.abs(position)) {
+          //this means they're short and buying to get flat or flip (i.e. open) long
+          setBookPnl((bookPnl) => bookPnl + (costBasis - data.close) * Math.abs(position));
+          setPosition((position) => position + quantity);
+          position + quantity == 0 ? setCostBasis(() => 0) : setCostBasis(() => data.close);
+        } else {
+          //this else means they're short and buying to close
+          setBookPnl((bookPnl) => bookPnl + (costBasis - data.close) * quantity);
+          setPosition((position) => position + quantity);
+          //costBasis wouldn't change
+        }
       } else {
-        //this else means they're short and buying to close
-        setBookPnl((bookPnl) => bookPnl + (costBasis - data.close) * quantity);
+        //implies their position is flat or long
+        //no pnl to book
         setPosition((position) => position + quantity);
-        //costBasis wouldn't change
+        position == 0 ? setCostBasis(() => data.close) : setCostBasis((costBasis) => ((costBasis * position) + (quantity * data.close)) / (quantity + position));
+        setBuyingPower((buyingPower)=>(buyingPower - (quantity * data.close)));
       }
-    } else {
-      //implies their position is flat or long
-      //no pnl to book
-      setPosition((position) => position + quantity);
-      position == 0 ? setCostBasis(() => data.close) : setCostBasis((costBasis) => ((costBasis * position) + (quantity * data.close)) / (quantity + position));
+      recordTrade('BUY');
+      //console.log('buying power is now: ', buyingPower);
+      //console.log above is always a step behind
     }
-    recordTrade('BUY');
   };
 
   async function sellTrade(quantity) {
@@ -136,6 +191,7 @@ function App() {
       position == 0 ? setCostBasis(() => data.close) : setCostBasis((costBasis) => ((costBasis * Math.abs(position)) + (quantity * data.close)) / (quantity + Math.abs(position)));
     }
     recordTrade('SELL');
+    setBuyingPower((buyingPower)=>buyingPower+(quantity*data.close));
   };
 
   async function getQuote(increment=false, symbolday=selected_symbol_day) {
@@ -255,6 +311,10 @@ function App() {
               <h1>
                 {`Welcome, ${userName}`}
               </h1>
+              <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>
+              <h2>
+                app.jsx knows buyingPower as: ${buyingPower}
+              </h2>
             </Grid.Column>
           </Grid>
         </Grid.Column>
