@@ -21,7 +21,10 @@ function App() {
   const [data, setData] = useState([]);
   const [symbol_days, setSymbolDays] = useState([]);
   const [selected_symbol_day, setSelectedSymbolDay] = useState();
-  const API_URL = 'http://localhost:3000/api';
+  const API_URL = 'https://app-d6f2drtuva-uc.a.run.app/api';
+  if(import.meta.env.DEV) {
+    const API_URL = 'http://localhost:3000/api';
+  }
   const [position, setPosition] = useState(0);
   const [costBasis, setCostBasis] = useState(0);
   const [chartData, setChartData] = useState({ datasets: [] });
@@ -32,7 +35,7 @@ function App() {
   const TICK_INTERVAL = 3000;
   const [trades, setTrades] = useState([]);
   const app = initializeApp({
-    apiKey: import.meta.env.VITE_API_KEY,
+    apiKey: "AIzaSyBldVPj-4ks84syXnCEsAc8nE6DDGspElE",
     authDomain: "tradetrain-11cc5.firebaseapp.com",
     projectId: "tradetrain-11cc5",
     storageBucket: "tradetrain-11cc5.appspot.com",

@@ -2,6 +2,7 @@ const fs = require('fs');
 const cors = require('cors');
 const express = require('express');
 const path = require('path');
+const {onRequest} = require("firebase-functions/v2/https");
 
 let corsOptions = {
     origin: '*',
@@ -55,4 +56,26 @@ app.get("/api/get_symbol_days",function(req, res){
 });
 
 
-app.listen(3000, () => console.log('Listening at 3000'));
+/*
+ * Import function triggers from their respective submodules:
+ *
+ * const {onCall} = require("firebase-functions/v2/https");
+ * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
+ *
+ * See a full list of supported triggers at https://firebase.google.com/docs/functions
+*/
+
+/*
+
+const logger = require("firebase-functions/logger");
+*/
+
+// Create and deploy your first functions
+// https://firebase.google.com/docs/functions/get-started
+
+// exports.helloWorld = onRequest((request, response) => {
+//   logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });
+exports.app = onRequest(app);
+//app.listen(3000, () => console.log('Listening at 3000'));

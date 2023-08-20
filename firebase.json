@@ -1,0 +1,34 @@
+{
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/api",
+        "function": "app"
+      },
+      {
+        "source": "/",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "functions": [
+    {
+      "runtime": "nodejs18",
+      "engines": {"node": "18"},
+      "source": "/src/services",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ]
+}
