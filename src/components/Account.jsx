@@ -6,10 +6,30 @@ function Account({netLiq,buyingPower,bookPnl}){
 
     return(
         <div>
-            <h1>netLiq: ${netLiq}</h1>
-            <h1>Your buying power is: ${buyingPower}</h1>
+            <table id="account">
+                <tbody>
+                    <tr>
+                        <th><h2>Initial NetLiq:</h2></th>
+                        <th><h2>Current Buying Power:</h2></th>
+                    </tr>
+                    <tr>
+                        <td><h2>${netLiq.toFixed(2)}</h2></td>
+                        <td><h2>${buyingPower.toFixed(2)}</h2></td>
+                    </tr>
+                    <tr>
+                        <th><h2></h2></th>
+                        <td><h2></h2></td>
+                    </tr>
+                    <tr>
+                        <th><h2></h2></th>
+                        <td><h2></h2></td>
+                    </tr>
+                </tbody>
+            </table>            
         </div>
     )
 };
 
 export default Account;
+
+
