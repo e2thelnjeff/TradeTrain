@@ -1,9 +1,19 @@
 import React from 'react';
+import { useEffect } from 'react';
 //import BuyButton from '.';
+import { doc, updateDoc } from "firebase/firestore";
 
-
-function TradeInterface({data,position,costBasis,bookPnl}) {
+function TradeInterface({data,position,costBasis,bookPnl,db,uid,netLiq}) {
     const pnl = (bookPnl+position*(data.close-costBasis)).toFixed(2);
+    //pnl is somehow still a string, need to parseFloat it below...
+    const userDoc = doc(db,"trainees",uid);
+
+    useEffect(() => {
+        const newNetLiq = parseFloat(netLiq) + parseFloat(pnl);
+        updateDoc(userDoc,{
+            netLiq: newNetLiq
+        })
+      }, [pnl]);
     
     return(
         <table id="tradeInterface">

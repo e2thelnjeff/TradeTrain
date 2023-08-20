@@ -32,7 +32,7 @@ function App() {
   const [bookPnl, setBookPnl] = useState(0);
   const [tradeQuantity, setTradeQuantity] = useState(1000);
   const [userName, setUserName] = useState("");
-  const TICK_INTERVAL = 3000;
+  const TICK_INTERVAL = 1000;
   const [trades, setTrades] = useState([]);
   const app = initializeApp({
     apiKey: "AIzaSyBldVPj-4ks84syXnCEsAc8nE6DDGspElE",
@@ -48,6 +48,7 @@ function App() {
 
   const [netLiq,setNetLiq] = useState(0);
   const [buyingPower, setBuyingPower] = useState(0);
+  const [uid, setUid] = useState('');
   
   //on page load
   useEffect(() => {
@@ -64,14 +65,12 @@ function App() {
     return () => clearInterval(id);
   }, [count, selected_symbol_day])
 
-
   const db = getFirestore(app);
 
 
   async function getUserStats(uid){
+    setUid(uid);
     const userDoc = doc(db,"trainees",uid);
-    //console.log("userDoc is: ",userDoc);
-    //console.log("netLiq is: ",userDoc.netLiq)
     const docSnap = (await getDoc(userDoc));
 
     if (docSnap.exists()){
@@ -95,10 +94,6 @@ function App() {
       }
   }
 
-
-
-
-
   
   function signIn(){
     signInWithPopup(getAuth(), provider)
@@ -113,13 +108,13 @@ function App() {
     setUserName(user.displayName);
     console.log("uid is: ", user.uid)
     //console.log("User Object: ",user)
-    getUserStats('69696977');
+    getUserStats(user.uid);
     //async const 
 
     })
   }
 
-  
+
 
   async function recordTrade(tradeSide){
     const trade={
@@ -208,6 +203,7 @@ function App() {
     setTimeout(()=>{
       setData(results);
       getChartData(symbolday);
+
     }, 100)
   };
 
@@ -262,7 +258,6 @@ function App() {
   }
 
   const handleTradeQuantityChange = (event) => {
-    //console.log('datatype is: ' + typeof event.target.value); 
     setTradeQuantity(parseInt(event.target.value));
   }
   
@@ -281,7 +276,7 @@ function App() {
             <Grid columns={2}>
               <Grid.Column floated='left'>
                 <div id="tradeInterface">
-                  <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} />
+                  <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} db={db} uid={uid} netLiq={netLiq} />
                 </div>
               </Grid.Column>
               <Grid.Column floated='right'>
