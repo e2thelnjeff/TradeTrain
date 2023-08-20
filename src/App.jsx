@@ -317,9 +317,6 @@ function App() {
                 {`Welcome, ${userName}`}
               </h1>
               <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>
-              <h2>
-                app.jsx knows buyingPower as: ${buyingPower}
-              </h2>
             </Grid.Column>
           </Grid>
         </Grid.Column>
