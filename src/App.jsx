@@ -284,23 +284,25 @@ function App() {
         <Grid.Column>
           <Grid.Row>
             <h1>{data.symbol}</h1>
-              <div id='chartContainer'>
-                <Line options={chartOptions} data={chartData} id='line' />
-              </div>
+            <table>
+              <tr>
+                <td><Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/></td>
+                <td><PriceTable data={data} /></td>
+              </tr>
+            </table>
+                <div id='chartContainer'>
+                  <Line options={chartOptions} data={chartData} id='line' />
+                </div>
           </Grid.Row>
 
           <Grid.Row>
-            <Grid columns={3}>
+            <Grid columns={2}>
               <Grid.Column floated='left'>
                 <div id="tradeInterface">
                   <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} db={db} uid={uid} netLiq={netLiq} />
                 </div>
               </Grid.Column>
-              <Grid.Column>
-                <div id="account">
-                  <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>
-                </div>
-              </Grid.Column>
+              
               <Grid.Column floated='right'>
                 <div>
                   <PriceTable data={data} />
@@ -331,8 +333,6 @@ function App() {
               <h1>
                 {`Welcome, ${userName}`}
               </h1>
-              <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>
-              <br/>
               <Leaderboard leaderboardData={leaderboardData}/>
             </Grid.Column>
           </Grid>
@@ -351,7 +351,8 @@ function App() {
         :
           //select the symbol day
           <>
-            <h2>Pick a day and symbol</h2>
+            <h2>Pick a day and ticker symbol from the drop-down list to start the game.</h2>
+            <h3>(But think fast: a whole minute of market data occurs every SECOND.)</h3>
             <select className="ui dropdown" title='Symbol Day' id='symbol_day_selection' onChange={(e)=>handleSymbolDaySelection(e.target.value)}>
                 {symbol_days.map((symbol_day, i) => {
                 return <option className='item' key={i} value={symbol_day}>{symbol_day}</option>

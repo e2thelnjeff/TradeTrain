@@ -15,14 +15,6 @@ function Account({netLiq,buyingPower,bookPnl}){
                         <td><h2>${netLiq.toFixed(2)}</h2></td>
                         <td><h2>${buyingPower.toFixed(2)}</h2></td>
                     </tr>
-                    <tr>
-                        <th><h2></h2></th>
-                        <td><h2></h2></td>
-                    </tr>
-                    <tr>
-                        <th><h2></h2></th>
-                        <td><h2></h2></td>
-                    </tr>
                 </tbody>
             </table>            
     )
