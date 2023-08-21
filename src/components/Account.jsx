@@ -5,7 +5,6 @@ function Account({netLiq,buyingPower,bookPnl}){
     //const newBuyingPower = buyingPower + bookPnl;
 
     return(
-        <div>
             <table id="account">
                 <tbody>
                     <tr>
@@ -26,7 +25,6 @@ function Account({netLiq,buyingPower,bookPnl}){
                     </tr>
                 </tbody>
             </table>            
-        </div>
     )
 };
 

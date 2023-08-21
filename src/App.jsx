@@ -280,10 +280,15 @@ function App() {
           </Grid.Row>
 
           <Grid.Row>
-            <Grid columns={2}>
+            <Grid columns={3}>
               <Grid.Column floated='left'>
                 <div id="tradeInterface">
                   <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} db={db} uid={uid} netLiq={netLiq} />
+                </div>
+              </Grid.Column>
+              <Grid.Column>
+                <div id="account">
+                  <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>
                 </div>
               </Grid.Column>
               <Grid.Column floated='right'>
@@ -316,7 +321,7 @@ function App() {
               <h1>
                 {`Welcome, ${userName}`}
               </h1>
-              <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>
+              <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>                                            
             </Grid.Column>
           </Grid>
         </Grid.Column>
