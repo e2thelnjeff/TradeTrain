@@ -64,10 +64,12 @@ div#buyAndSell > button {
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
+  color: white;
 }
 
 button#buy {
   background-color:rgb(29, 136, 57);
+  color: white;
 }
 
 button#buy:hover {
@@ -77,10 +79,15 @@ button#buy:hover {
 button#sell {
   background-color:rgb(215, 16, 16);
   margin-left: 5px;
+  color: white;
 }
 
 button#sell:hover {
   background-color:rgb(135, 10, 10);
+}
+
+#signInButton {
+  color: white;
 }
 
 #tradeLog {
