@@ -12,8 +12,8 @@ function Account({netLiq,buyingPower,bookPnl}){
                         <th><h2>Current Buying Power:</h2></th>
                     </tr>
                     <tr>
-                        <td><h2>${netLiq.toFixed(2)}</h2></td>
-                        <td><h2>${buyingPower.toFixed(2)}</h2></td>
+                        <td><h2>${netLiq.toLocaleString('en-US', {maximumFractionDigits:2})}</h2></td>
+                        <td><h2>${buyingPower.toLocaleString('en-US', {maximumFractionDigits:2})}</h2></td>
                     </tr>
                 </tbody>
             </table>            

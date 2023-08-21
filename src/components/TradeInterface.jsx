@@ -24,7 +24,7 @@ function TradeInterface({data,position,costBasis,bookPnl,db,uid,netLiq}) {
                 </tr>
                 <tr>
                     <td><h2>{data.volume}</h2></td>
-                    <td><h2>{data.close}</h2></td>
+                    <td><h2>${data.close.toLocaleString('en-US', {maximumFractionDigits:2})}</h2></td>
                 </tr>
                 <tr>
                     <th><h2>Net Position</h2></th>
@@ -32,7 +32,7 @@ function TradeInterface({data,position,costBasis,bookPnl,db,uid,netLiq}) {
                 </tr>
                 <tr>
                     <th><h2>P&L</h2></th>
-                    <td><h2>${pnl}</h2></td>
+                    <td><h2>${pnl.toLocaleString('en-US', {maximumFractionDigits:2})}</h2></td>
                 </tr>
             </tbody>
         </table>

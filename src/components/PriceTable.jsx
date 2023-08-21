@@ -14,15 +14,15 @@ function PriceTable(data){
           </tr>
           <tr>
             <td>High: </td>
-            <td>{data.high}</td>
+            <td>${parseFloat(data.high).toLocaleString('en-US', {maximumFractionDigits:2})}</td>
           </tr>
           <tr>
             <td>Open: </td>
-            <td>{data.open}</td>
+            <td>${parseFloat(data.open).toLocaleString('en-US', {maximumFractionDigits:2})}</td>
           </tr>
           <tr>
             <td>Low: </td>
-            <td>{data.low}</td>
+            <td>${parseFloat(data.low).toLocaleString('en-US', {maximumFractionDigits:2})}</td>
           </tr>
         </tbody>
       </table>
