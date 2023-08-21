@@ -1,7 +1,7 @@
 function NotificationBox({notificationBox}){
     return (
         <div id='notificationBox'>
-            <h1>{notificationBox.header}</h1>
+            <h2>{notificationBox.header}</h2>
             <p>{notificationBox.body}</p>
         </div>
     )

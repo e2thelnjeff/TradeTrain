@@ -52,8 +52,20 @@ function App() {
   const [buyingPower, setBuyingPower] = useState(0);
   const [uid, setUid] = useState('');
   const [leaderboardData, setLeaderboardData] = useState([]);
+
   const [notificationBox, setNotificationBox] = useState({'header': 'Watch this space for trading tips, feedback, and notices.', 'body': ''})
-  
+  const notifications = [
+    {'header': "Buy low, sell high", 'body':""},
+    {'header': "Ride your winners, cut your losers short", 'body':""},
+    {'header': "Never do anything today that will prevent you from trading tomorrow.", 'body':""},
+    {'header': "The market can remain irrational longer than you can remain solvent.", 'body':""},
+    {'header': "The market will fluctuate.", 'body':""},
+    {'header': "Every price is either a buy or a sale", 'body':""},
+    {'header': "You may buy the bottom tick or sell the top tick exactly once in your career.  You are free to do the opposite as often as you wish.", 'body':""},
+    {'header': "Make a trading plan, and stick to it.", 'body':""}
+
+  ];
+
   //on page load
   useEffect(() => {
     getSymbol_Days();
@@ -61,22 +73,26 @@ function App() {
   }, []);
 
   useEffect(()=>{
-    let id = setInterval(()=>{
-      function updateLeaderboard() {
-        let traineeDocs = query(collection(db, "trainees"), orderBy("netLiq", "desc"));
-        getDocs(traineeDocs).then((trainDocs)=>{
-          setLeaderboardData(trainDocs.docs);
-        })
+    if (count > 390){
+      setNotificationBox({'header': <a href="https://tradetrain-11cc5.firebaseapp.com">Market closed.  Click to play again.</a>, 'body':""})
+    } else{
+      let id = setInterval(()=>{
+        function updateLeaderboard() {
+          let traineeDocs = query(collection(db, "trainees"), orderBy("netLiq", "desc"));
+          getDocs(traineeDocs).then((trainDocs)=>{
+            setLeaderboardData(trainDocs.docs);
+          })
         
-      }
-      if (selected_symbol_day) {
-        getQuote(true, selected_symbol_day);
-        updateLeaderboard();
-      }
-    },TICK_INTERVAL)
-    return () => clearInterval(id);
-  }, [count, selected_symbol_day])
+        }
+        if (selected_symbol_day) {
+          getQuote(true, selected_symbol_day);
+          updateLeaderboard();
+        }
+      },TICK_INTERVAL)
+      return () => clearInterval(id);
+    }}, [count, selected_symbol_day])
 
+  
   const db = getFirestore(app);
 
 
@@ -98,14 +114,8 @@ function App() {
         });
         setNetLiq(500000);
         setBuyingPower(500000);
-        //setTimeout(()=>console.log("netLiq for new user is: ",netLiq),3000);
-        // no amount of waiting seems to be able to let one set and IMMEDIATELY 
-        // RETRIEVE netLiq here.  It'll show up as 0 if one queries it rn.
-        // but it's available and correct if one queries it elsewhere/later 
-        //console.log("netLiq is: ", netLiq)
       }
   }
-
   
   function signIn(){
     signInWithPopup(getAuth(), provider)
@@ -119,14 +129,10 @@ function App() {
     // ...
     setUserName(user.displayName);
     console.log("uid is: ", user.uid)
-    //console.log("User Object: ",user)
     getUserStats(user);
-    //async const 
 
     })
   }
-
-
 
   async function recordTrade(tradeSide){
     const trade={
@@ -140,9 +146,8 @@ function App() {
     const copyOfTrades=[...trades];
     copyOfTrades.push(trade);
     setTrades(copyOfTrades)
-    //console.log('buying power is now: ', buyingPower)
-    //the above console.log is always a step behind
-
+    let randomInt = Math.ceil(Math.random()*notifications.length)-1;
+    setNotificationBox(notifications[randomInt]);
   }
 
   async function getSymbol_Days() {
@@ -154,6 +159,7 @@ function App() {
   async function buyTrade(quantity) {
     if ((quantity*data.close) > buyingPower){
       console.log('insufficient funds');
+      setNotificationBox({'header': "Insufficient funds.", 'body':""})
       return
     } else{
       if (position < 0) {
@@ -176,8 +182,6 @@ function App() {
         setBuyingPower((buyingPower)=>(buyingPower - (quantity * data.close)));
       }
       recordTrade('BUY');
-      //console.log('buying power is now: ', buyingPower);
-      //console.log above is always a step behind
     }
   };
 
@@ -189,7 +193,6 @@ function App() {
           setPosition((position) => position - quantity)
           position - quantity == 0 ? setCostBasis(() => 0) : setCostBasis(() => data.close)
         } else{
-          console.log("tut tut!  no selling short.");
 
           return
         }
@@ -203,8 +206,7 @@ function App() {
     } else {
       //implies their position is flat or short
       //no pnl to book
-      setNotificationBox({"header":"tut tut!", "body": "no selling short (yet™)"});
-      console.log("tut tut!  no selling short!")
+      setNotificationBox({"header":"No short-sales (yet).", "body": ""});
       return
       setPosition((position) => position - quantity);
       position == 0 ? setCostBasis(() => data.close) : setCostBasis((costBasis) => ((costBasis * Math.abs(position)) + (quantity * data.close)) / (quantity + Math.abs(position)));
