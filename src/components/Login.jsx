@@ -7,9 +7,15 @@ function Login(props) {
         <h1>
             TradeTrain
         </h1>
-        <p>
-            Please login below...
-        </p>
+        <h2>
+            by Hindsight
+        </h2>
+        <br/>
+        <br/>
+        <h2>
+            A fast-paced game to help traders and managers improve trading outcomes by SIMULATING on curated historical market data.
+        </h2>
+        <br/>
         {props.children}
     </>
     )
