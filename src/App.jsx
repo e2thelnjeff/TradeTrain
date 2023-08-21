@@ -73,24 +73,24 @@ function App() {
   }, []);
 
   useEffect(()=>{
-    if (count > 390){
-      setNotificationBox({'header': <a href="https://tradetrain-11cc5.firebaseapp.com">Market closed.  Click to play again.</a>, 'body':""})
-    } else{
-      let id = setInterval(()=>{
-        function updateLeaderboard() {
-          let traineeDocs = query(collection(db, "trainees"), where("netLiq", "!=", 500000),orderBy("netLiq", "desc"));
-          getDocs(traineeDocs).then((trainDocs)=>{
-            setLeaderboardData(trainDocs.docs);
-          })
-        
+    let id = setInterval(()=>{
+      function updateLeaderboard() {
+        let traineeDocs = query(collection(db, "trainees"), where("netLiq", "!=", 500000),orderBy("netLiq", "desc"));
+        getDocs(traineeDocs).then((trainDocs)=>{
+          setLeaderboardData(trainDocs.docs);
+        })
+      
+      }
+      if (selected_symbol_day) {
+        if (count > 390){
+          setNotificationBox({'header': <a href="https://tradetrain-11cc5.firebaseapp.com">Market closed.  Click to play again.</a>, 'body':""})
         }
-        if (selected_symbol_day) {
-          getQuote(true, selected_symbol_day);
-          updateLeaderboard();
-        }
-      },TICK_INTERVAL)
-      return () => clearInterval(id);
-    }}, [count, selected_symbol_day])
+        else{getQuote(true, selected_symbol_day)}
+        updateLeaderboard();
+      }
+    },TICK_INTERVAL)
+    return () => clearInterval(id);
+  }, [count, selected_symbol_day])
 
   
   const db = getFirestore(app);
@@ -350,7 +350,7 @@ function App() {
           //user must login
           <>
             <h2>Please sign in below...</h2>
-            <button onClick={signIn}>Sign in with Google</button>
+            <button onClick={signIn} className='signInButton'>Sign in with Google</button>
           </>
         :
           //select the symbol day
