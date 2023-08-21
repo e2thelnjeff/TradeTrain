@@ -13,7 +13,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import Login from './components/Login';
 
-import { getFirestore, onSnapshot, collection, setDoc, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
+import { getFirestore, onSnapshot, collection, setDoc, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import Account from './components/Account';
 import Leaderboard from './components/Leaderboard';
 import NotificationBox from './components/NotificationBox'
@@ -78,7 +78,7 @@ function App() {
     } else{
       let id = setInterval(()=>{
         function updateLeaderboard() {
-          let traineeDocs = query(collection(db, "trainees"), orderBy("netLiq", "desc"));
+          let traineeDocs = query(collection(db, "trainees"), where("netLiq", "!=", 500000),orderBy("netLiq", "desc"));
           getDocs(traineeDocs).then((trainDocs)=>{
             setLeaderboardData(trainDocs.docs);
           })
