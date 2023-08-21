@@ -19,7 +19,7 @@ import Leaderboard from './components/Leaderboard';
 
 function App() {
   const [count, setCount] = useState(1);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({"date":"2021-09-29T13:33:00.000Z","open":0,"high":0,"low":0,"close":0,"volume":0});
   const [symbol_days, setSymbolDays] = useState([]);
   const [selected_symbol_day, setSelectedSymbolDay] = useState();
   const API_URL = 'https://app-d6f2drtuva-uc.a.run.app/api';
