@@ -16,6 +16,7 @@ import Login from './components/Login';
 import { getFirestore, onSnapshot, collection, setDoc, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
 import Account from './components/Account';
 import Leaderboard from './components/Leaderboard';
+import NotificationBox from './components/NotificationBox'
 
 function App() {
   const [count, setCount] = useState(1);
@@ -51,6 +52,7 @@ function App() {
   const [buyingPower, setBuyingPower] = useState(0);
   const [uid, setUid] = useState('');
   const [leaderboardData, setLeaderboardData] = useState([]);
+  const [notificationBox, setNotificationBox] = useState({'header': 'Watch this space for trading tips, feedback, and notices.', 'body': ''})
   
   //on page load
   useEffect(() => {
@@ -188,6 +190,7 @@ function App() {
           position - quantity == 0 ? setCostBasis(() => 0) : setCostBasis(() => data.close)
         } else{
           console.log("tut tut!  no selling short.");
+
           return
         }
         
@@ -200,6 +203,7 @@ function App() {
     } else {
       //implies their position is flat or short
       //no pnl to book
+      setNotificationBox({"header":"tut tut!", "body": "no selling short (yet™)"});
       console.log("tut tut!  no selling short!")
       return
       setPosition((position) => position - quantity);
@@ -284,31 +288,29 @@ function App() {
         <Grid.Column>
           <Grid.Row>
             <h1>{data.symbol}</h1>
-            <table>
-              <tr>
-                <td><Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/></td>
-                <td><PriceTable data={data} /></td>
-              </tr>
-            </table>
-                <div id='chartContainer'>
-                  <Line options={chartOptions} data={chartData} id='line' />
-                </div>
+            <div id='topLeftTables'>
+              <Grid columns={3} celled stretched>
+                <Grid.Column width={0.3}>
+                  <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>
+                </Grid.Column>
+                <Grid.Column width={0.3}>
+                  <PriceTable data={data} />
+                </Grid.Column>
+                <Grid.Column width={0.3}>
+                  <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} db={db} uid={uid} netLiq={netLiq} />
+                </Grid.Column>
+              </Grid>
+            </div>
+          </Grid.Row>
+          <Grid.Row>
+            <div id='chartContainer'>
+              <Line options={chartOptions} data={chartData} id='line' />
+            </div>
           </Grid.Row>
 
           <Grid.Row>
-            <Grid columns={2}>
-              <Grid.Column floated='left'>
-                <div id="tradeInterface">
-                  <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} db={db} uid={uid} netLiq={netLiq} />
-                </div>
-              </Grid.Column>
-              
-              <Grid.Column floated='right'>
-                <div>
-                  <PriceTable data={data} />
-                </div>
-              </Grid.Column>
-            </Grid>
+            {/*insert notif box*/}
+            <NotificationBox notificationBox={notificationBox}/>
           </Grid.Row>
 
           <Grid.Row>

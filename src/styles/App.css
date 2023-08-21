@@ -15,6 +15,7 @@ table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   font-size: large;
+  width: 100%;
 }
 
 td, th {
@@ -40,17 +41,10 @@ tr:nth-child(even) {
 #priceTable {
   width: 90%;
   border-radius: 3px;
-  padding-top: 0px;
-  margin-left: auto;
-  margin-bottom: 10px;
 }
 
 #symbol_day_selection {
   margin: 20px;
-}
-
-#tradeInterface {
-  margin-right: auto;
 }
 
 #line {
@@ -107,4 +101,29 @@ button#sell:hover {
 #tradeLog > thead > tr:nth-child(2) {
   position: sticky;
   top: 0;
+}
+
+#topLeftTables div {
+  padding: 0;
+}
+
+#topLeftTables tables {
+  width: 33%;
+}
+
+#notificationBox {
+  background-color: #454141;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: antiquewhite;
+  max-width: 100%;
+  overflow-wrap: normal;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+}
+
+#notificationBox > p {
+  padding-left: 10px;
+  font-size:large
 }
