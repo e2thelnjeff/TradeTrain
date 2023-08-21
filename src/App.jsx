@@ -291,14 +291,14 @@ function App() {
           <Grid.Row>
             <h1>{data.symbol}</h1>
             <div id='topLeftTables'>
-              <Grid columns={3} celled stretched>
-                <Grid.Column width={0.3}>
+              <Grid columns={3} celled stretched stackable>
+                <Grid.Column width={5}>
                   <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>
                 </Grid.Column>
-                <Grid.Column width={0.3}>
+                <Grid.Column width={5}>
                   <PriceTable data={data} />
                 </Grid.Column>
-                <Grid.Column width={0.3}>
+                <Grid.Column width={6}>
                   <TradeInterface data={data} position={position} costBasis={costBasis} bookPnl={bookPnl} db={db} uid={uid} netLiq={netLiq} />
                 </Grid.Column>
               </Grid>
