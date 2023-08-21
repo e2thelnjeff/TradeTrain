@@ -8,12 +8,12 @@ function Account({netLiq,buyingPower,bookPnl}){
             <table id="account">
                 <tbody>
                     <tr>
-                        <th><h2>Initial NetLiq:</h2></th>
-                        <th><h2>Current Buying Power:</h2></th>
+                        <th>Initial NetLiq:</th>
+                        <th>Current Buying Power:</th>
                     </tr>
                     <tr>
-                        <td><h2>${netLiq.toLocaleString('en-US', {maximumFractionDigits:2})}</h2></td>
-                        <td><h2>${buyingPower.toLocaleString('en-US', {maximumFractionDigits:2})}</h2></td>
+                        <td>${netLiq.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
+                        <td>${buyingPower.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
                     </tr>
                 </tbody>
             </table>            

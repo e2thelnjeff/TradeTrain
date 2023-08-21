@@ -19,20 +19,20 @@ function TradeInterface({data,position,costBasis,bookPnl,db,uid,netLiq}) {
         <table id="tradeInterface">
             <tbody>
                 <tr>
-                    <th><h2>Volume</h2></th>
-                    <th><h2>Last Price</h2></th>
+                    <th>Volume</th>
+                    <th>Last Price</th>
                 </tr>
                 <tr>
-                    <td><h2>{data.volume}</h2></td>
-                    <td><h2>${data.close.toLocaleString('en-US', {maximumFractionDigits:2})}</h2></td>
+                    <td>{data.volume}</td>
+                    <td>${data.close.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
                 </tr>
                 <tr>
-                    <th><h2>Net Position</h2></th>
-                    <td><h2>{position}</h2></td>
+                    <th>Net Position</th>
+                    <td>{position}</td>
                 </tr>
                 <tr>
-                    <th><h2>P&L</h2></th>
-                    <td><h2>${pnl.toLocaleString('en-US', {maximumFractionDigits:2})}</h2></td>
+                    <th>P&L</th>
+                    <td>${pnl.toLocaleString('en-US', {maximumFractionDigits:2})}</td>
                 </tr>
             </tbody>
         </table>
