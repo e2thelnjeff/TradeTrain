@@ -13,8 +13,9 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import Login from './components/Login';
 
-import { getFirestore, onSnapshot, collection, setDoc, doc, getDoc, getDocs } from "firebase/firestore";
+import { getFirestore, onSnapshot, collection, setDoc, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
 import Account from './components/Account';
+import Leaderboard from './components/Leaderboard';
 
 function App() {
   const [count, setCount] = useState(1);
@@ -49,6 +50,7 @@ function App() {
   const [netLiq,setNetLiq] = useState(0);
   const [buyingPower, setBuyingPower] = useState(0);
   const [uid, setUid] = useState('');
+  const [leaderboardData, setLeaderboardData] = useState([]);
   
   //on page load
   useEffect(() => {
@@ -58,8 +60,16 @@ function App() {
 
   useEffect(()=>{
     let id = setInterval(()=>{
+      function updateLeaderboard() {
+        let traineeDocs = query(collection(db, "trainees"), orderBy("netLiq", "desc"));
+        getDocs(traineeDocs).then((trainDocs)=>{
+          setLeaderboardData(trainDocs.docs);
+        })
+        
+      }
       if (selected_symbol_day) {
         getQuote(true, selected_symbol_day);
+        updateLeaderboard();
       }
     },TICK_INTERVAL)
     return () => clearInterval(id);
@@ -68,11 +78,11 @@ function App() {
   const db = getFirestore(app);
 
 
-  async function getUserStats(uid){
-    setUid(uid);
-    const userDoc = doc(db,"trainees",uid);
+  async function getUserStats(user){
+    setUid(user.uid);
+    const userDoc = doc(db,"trainees",user.uid);
     const docSnap = (await getDoc(userDoc));
-
+    console.log(user.displayName, user.uid)
     if (docSnap.exists()){
       const traineeData=docSnap.data()
       setNetLiq(traineeData.netLiq)
@@ -80,8 +90,8 @@ function App() {
       console.log("netLiq is: ", traineeData.netLiq)
       } else{
         //create a trainee and give him a netLiq
-        await setDoc(doc(db,"trainees",uid),{
-          name: "unknown",
+        await setDoc(doc(db,"trainees",user.uid),{
+          name: user.displayName,
           netLiq: 500000
         });
         setNetLiq(500000);
@@ -108,7 +118,7 @@ function App() {
     setUserName(user.displayName);
     console.log("uid is: ", user.uid)
     //console.log("User Object: ",user)
-    getUserStats(user.uid);
+    getUserStats(user);
     //async const 
 
     })
@@ -321,7 +331,9 @@ function App() {
               <h1>
                 {`Welcome, ${userName}`}
               </h1>
-              <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>                                            
+              <Account netLiq={netLiq} buyingPower={buyingPower} bookPnl={bookPnl}/>
+              <br/>
+              <Leaderboard leaderboardData={leaderboardData}/>
             </Grid.Column>
           </Grid>
         </Grid.Column>
