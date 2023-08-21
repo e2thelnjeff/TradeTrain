@@ -12,6 +12,7 @@ function Login(props) {
         </h2>
         <br/>
         <br/>
+        <br/>
         <h2>
             A fast-paced game to help traders and managers improve trading outcomes by SIMULATING on curated historical market data.
         </h2>
