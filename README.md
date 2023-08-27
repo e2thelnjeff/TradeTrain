@@ -8,7 +8,7 @@
 ## Setup
 ### Frontend
 * `npm install`
-* `npm run dev --port 3000`
+* `npm run dev`
 
 
 ### Backend
