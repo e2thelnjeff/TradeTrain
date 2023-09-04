@@ -10,7 +10,7 @@ Compete against your friends or enemies to climb the ranks of the **online leade
 ## What does TradeTrain do behind the scenes?
 With the use of a **React** + **Vite** frontend, and a **NodeJS** and **Firebase** backend, our app [TradeTrain](https://tradetrain.owenn.dev) condenses a trading day into around 5 minutes and lets traders practice without risk of consequences on our curated market data.
 
-We also use **Firebase Datastore** to persist user data to a database allowing real-time multiplayer competitiveness through the leaderboard and allowing the user to log back in and continue where the last were.
+We also use **Firebase Datastore** to persist user data to a database allowing real-time multiplayer competitiveness through the leaderboard and allowing the user to log back in and continue where they left off.
 
 ## Contributers
 <a href="https://github.com/e2thelnjeff/TradeTrain/graphs/contributors">
